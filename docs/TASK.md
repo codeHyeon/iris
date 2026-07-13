@@ -25,8 +25,8 @@
 
 ## 할 일
 
-- [ ] Frontend TypeScript + React + Vite 세팅
-- [ ] Backend TypeScript + Express 세팅
+- [x] Frontend TypeScript + React + Vite 세팅
+- [x] Backend TypeScript + Express 세팅
 - [ ] 기본 폴더 구조 생성
 - [ ] ESLint/Prettier 설정
 - [ ] 환경 변수 예시 파일 작성

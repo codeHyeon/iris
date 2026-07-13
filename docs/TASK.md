@@ -30,10 +30,10 @@
 - [x] 기본 폴더 구조 생성
 - [x] ESLint/Prettier 설정
 - [x] 환경 변수 예시 파일 작성
-- [ ] Frontend Vercel 배포 방식 결정
-- [ ] Backend Docker/EC2 배포 방식 결정
-- [ ] Backend와 Discord Bot을 같은 프로세스로 둘지 결정
-- [ ] 로컬 실행 명령어 정리
+- [x] Frontend Vercel 배포 방식 결정
+- [x] Backend Docker/EC2 배포 방식 결정
+- [x] Backend와 Discord Bot을 같은 프로세스로 둘지 결정
+- [x] 로컬 실행 명령어 정리
 
 ## 이슈
 
@@ -92,6 +92,8 @@
 - [ ] notice-config module 생성
 - [ ] notice-config routes/controller/service/repository 골격 작성
 - [ ] Backend Dockerfile 초안 작성
+- [ ] Backend 배포용 Docker Compose 작성
+- [ ] Fork `personal-deploy` Backend CI/CD workflow 작성
 - [ ] EC2에서 빈 Backend 앱 실행 확인
 
 ## 이슈
@@ -228,6 +230,7 @@
 - [ ] 테스트 크롤링 API 연동
 - [ ] 최근 공지 미리보기 구현
 - [ ] 감지 카테고리 상태 관리 구현
+- [ ] Fork `personal-deploy` Frontend CI 및 Vercel 배포 workflow 작성
 - [ ] Vercel preview 배포 확인
 - [ ] Frontend API base URL 환경 변수 연결 확인
 

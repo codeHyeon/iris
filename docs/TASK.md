@@ -29,7 +29,7 @@
 - [x] Backend TypeScript + Express 세팅
 - [x] 기본 폴더 구조 생성
 - [x] ESLint/Prettier 설정
-- [ ] 환경 변수 예시 파일 작성
+- [x] 환경 변수 예시 파일 작성
 - [ ] Frontend Vercel 배포 방식 결정
 - [ ] Backend Docker/EC2 배포 방식 결정
 - [ ] Backend와 Discord Bot을 같은 프로세스로 둘지 결정

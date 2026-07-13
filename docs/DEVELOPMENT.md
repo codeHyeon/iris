@@ -83,6 +83,22 @@ The MVP focuses on building a working flow from notice site registration to Disc
 
 ---
 
+# Environment Variables
+
+각 앱의 예시 파일을 복사해 로컬 환경 변수를 준비한다.
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+Copy-Item frontend/.env.example frontend/.env
+```
+
+- Backend: `NODE_ENV`, `PORT`, `DATABASE_URL`, `DISCORD_BOT_TOKEN`, `DISCORD_CLIENT_ID`, `ADMIN_WEB_URL`
+- Frontend: `VITE_API_BASE_URL`
+- `.env`와 `.env.*`는 커밋하지 않으며, 공유 가능한 예시 파일인 `.env.example`만 버전 관리한다.
+- 실제 Discord 토큰과 운영 DB 접속 정보는 로컬 `.env` 또는 배포 플랫폼의 환경 변수에만 저장한다.
+
+---
+
 # Directory Structure
 
 IRIS는 도메인 기준으로 코드를 나누고, 각 도메인 내부에 controller, service, repository, route, type 파일을 둔다.

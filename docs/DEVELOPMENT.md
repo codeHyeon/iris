@@ -103,6 +103,14 @@ hub
 │       ├── pages
 │       ├── components
 │       ├── features
+│       │   ├── notice-config
+│       │   │   ├── api
+│       │   │   ├── components
+│       │   │   ├── hooks
+│       │   │   └── types
+│       │   └── discord
+│       │       ├── api
+│       │       └── types
 │       ├── api
 │       ├── styles
 │       └── types
@@ -164,7 +172,9 @@ hub
 ## Frontend Structure Rules
 
 - `pages`는 라우트 단위 화면을 둔다.
-- `features`는 notice config, subscribe preview 등 기능 단위 UI와 상태를 둔다.
+- `features`는 notice config, subscribe preview 등 도메인 기능 단위로 API, UI, 상태, 타입을 함께 관리한다.
 - `components`는 Button, Input, Table 같은 재사용 UI를 둔다.
-- `api`는 backend REST API client를 둔다.
+- 루트 `api`는 base URL, 공통 요청 처리, 공통 에러 변환처럼 특정 도메인을 모르는 backend REST API client만 둔다.
+- `features/*/api`는 해당 도메인의 endpoint와 request/response 변환을 둔다.
+- 도메인 API를 루트 `api`에 모으지 않고 소유하는 feature 내부에 둔다.
 - `types`는 frontend에서 공유하는 TypeScript 타입을 둔다.

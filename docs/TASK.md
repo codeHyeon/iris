@@ -54,19 +54,20 @@
 
 ## 할 일
 
-- [ ] MySQL Docker compose 작성
-- [ ] Production MySQL 연결 방식 결정
-- [ ] 배포 환경 DATABASE_URL 구조 정리
-- [ ] Prisma 설치
-- [ ] `schema.prisma` 작성
-- [ ] Prisma migration 실행
-- [ ] 배포 시 Prisma migration 실행 방식 결정
-- [ ] Prisma client 연결 확인
-- [ ] seed 또는 테스트 데이터 초안 작성
+- [x] MySQL Docker compose 작성
+- [x] Production MySQL 연결 방식 결정
+- [x] 배포 환경 DATABASE_URL 구조 정리
+- [x] Prisma 설치
+- [x] `schema.prisma` 작성
+- [x] Prisma migration 파일 작성
+- [x] 배포 시 Prisma migration 실행 방식 결정
+- [x] Prisma client 생성 및 타입 연결 확인
+- [x] seed 또는 테스트 데이터 초안 작성
 
 ## 이슈
 
-- 없음
+- 로컬 Windows `mysqld`가 3306 포트를 사용 중이라 Docker MySQL host 포트를 3307로 변경함.
+- npm audit 기준 moderate 취약점 3건이 남아 있음. 현재 Day 2 범위에는 영향 없음.
 
 ## 이월
 

@@ -84,16 +84,16 @@
 
 ## 할 일
 
-- [ ] `landing2.png` 기준 Landing 구현
-- [ ] IRIS logo/hero asset 연결
-- [ ] Discord Bot 초대 버튼 UI 구현
-- [ ] 시작 가이드 버튼 토글 구현
-- [ ] Feature Card와 Guide Step Card 전환 구현
-- [ ] Guide Step Card 숫자 배지 `01~04` 적용
-- [ ] Discord Bot 초대 링크 미설정 상태 처리
-- [ ] 데스크톱/모바일 반응형 1차 확인
-- [ ] Frontend build/lint 확인
-- [ ] Day 4 발표용 화면 흐름 정리
+- [x] `landing2.png` 기준 Landing 구현
+- [x] IRIS logo/hero asset 연결
+- [x] Discord Bot 초대 버튼 UI 구현
+- [x] 시작 가이드 버튼 토글 구현
+- [x] Feature Card와 Guide Step Card 전환 구현
+- [x] Guide Step Card 숫자 배지 `01~04` 적용
+- [x] Discord Bot 초대 링크 미설정 상태 처리
+- [x] 데스크톱/모바일 반응형 1차 확인
+- [x] Frontend build/lint 확인
+- [x] Day 4 발표용 화면 흐름 정리
 
 ## 이슈
 
@@ -252,15 +252,19 @@
 
 ## 목표
 
-- 관리자 사이트 등록 화면과 테스트 크롤링 연동을 구현한다.
+- 관리자 사이트 등록 화면과 클릭 가능한 mock crawl flow를 구현한다.
+- 이후 실제 테스트 크롤링 API로 교체하기 쉬운 frontend 상태 구조를 만든다.
 
 ## 할 일
 
 - [ ] 사이트 등록 화면 구현
 - [ ] selector 입력 form 구현
-- [ ] 테스트 크롤링 API 연동
-- [ ] 최근 공지 미리보기 구현
+- [ ] notice config form state 작성
+- [ ] mock test crawl 함수 작성
+- [ ] 테스트 크롤링 버튼 클릭 시 mock notices/categories 반환
+- [ ] 최근 공지 미리보기 mock 렌더링
 - [ ] 감지 카테고리 상태 관리 구현
+- [ ] 사이트 등록에서 카테고리 설정 화면으로 이동할 state 준비
 - [ ] Frontend API base URL 환경 변수 연결 확인
 - [ ] 사이트 등록 화면 반응형 1차 확인
 
@@ -278,17 +282,21 @@
 
 ## 목표
 
-- 카테고리 설정, 저장, 완료 화면을 구현하고 Frontend preview를 확인한다.
+- 카테고리 설정, 저장, 완료 화면을 mock flow로 연결한다.
+- mock API 자리를 실제 API로 교체할 수 있게 화면 상태와 데이터 흐름을 정리한다.
 
 ## 할 일
 
-- [ ] Discord 채널 목록 API 연동
+- [ ] mock Discord 채널 목록 작성
 - [ ] 카테고리 설정 table 구현
 - [ ] roleName/isActive 입력 구현
 - [ ] 저장/다음 버튼 상태 구현
-- [ ] 기존 설정 조회 후 form 채우기
+- [ ] mock 설정 저장 함수 작성
+- [ ] 기존 설정 조회 mock으로 form 채우기
 - [ ] 설정 완료 화면 구현
+- [ ] 설정 완료 화면에 mock 설정 요약 표시
 - [ ] 설정 삭제 UI 구현
+- [ ] 사이트 등록 → 카테고리 설정 → 설정 완료 mock flow 연결
 - [ ] 반응형 1차 점검
 - [ ] Fork `personal-deploy` Frontend CI 및 Vercel 배포 workflow 작성
 - [ ] Vercel preview 배포 확인

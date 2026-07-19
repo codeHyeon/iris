@@ -153,20 +153,21 @@
 
 ## 할 일
 
-- [ ] Express app 구조 작성
-- [ ] Health check API 작성
-- [ ] 공통 success/error response 작성
-- [ ] 공통 error class 작성
-- [ ] logger 초안 작성
-- [ ] request validation 방식 결정 및 적용
-- [ ] notice-config module 생성
-- [ ] notice-config routes/controller/service/repository 골격 작성
-- [ ] Prisma client 공통 연결을 repository에서 사용할 수 있게 정리
-- [ ] Backend health/db check 수동 확인
+- [x] Express app 구조 작성
+- [x] Health check API 작성
+- [x] 공통 success/error response 작성
+- [x] 공통 error class 작성
+- [x] logger 초안 작성
+- [x] request validation 방식 결정 및 적용
+- [x] notice-config module 생성
+- [x] notice-config routes/controller/service/repository 골격 작성
+- [x] Prisma client 공통 연결을 repository에서 사용할 수 있게 정리
+- [x] Backend health/db check 수동 확인
 
 ## 이슈
 
-- 없음
+- `/api/health` 수동 확인은 성공함.
+- Docker MySQL 실행 후 DB check 성공함. (`notice_sites=1`)
 
 ## 이월
 

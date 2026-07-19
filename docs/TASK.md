@@ -39,6 +39,10 @@
 
 - 없음
 
+## 검증
+
+- 로컬 실행 명령어 정리 완료
+
 ## 이월
 
 - 없음
@@ -69,6 +73,11 @@
 - 로컬 Windows `mysqld`가 3306 포트를 사용 중이라 Docker MySQL host 포트를 3307로 변경함.
 - npm audit 기준 moderate 취약점 3건이 남아 있음. 현재 Day 2 범위에는 영향 없음.
 
+## 검증
+
+- Prisma client 생성 및 타입 연결 확인
+- seed 또는 테스트 데이터 초안 작성 완료
+
 ## 이월
 
 - 없음
@@ -98,6 +107,11 @@
 ## 이슈
 
 - 없음
+
+## 검증
+
+- Frontend build/lint 확인
+- 데스크톱/모바일 반응형 1차 확인
 
 ## 이월
 
@@ -135,6 +149,11 @@
 
 - 없음
 
+## 검증
+
+- 관리자 mock flow 반응형 1차 확인
+- 사이트 등록 → 카테고리 설정 → 설정 완료 mock flow 연결 확인
+
 ## 이월
 
 - 현재 Admin mock flow는 신규 설정 서버 기준으로 구현한다.
@@ -166,8 +185,15 @@
 
 ## 이슈
 
-- `/api/health` 수동 확인은 성공함.
-- Docker MySQL 실행 후 DB check 성공함. (`notice_sites=1`)
+- 없음
+
+## 검증
+
+- `npm run type-check` 통과
+- `npm run lint` 통과
+- `npm run build` 통과
+- `/api/health` 수동 확인 성공
+- Docker MySQL 실행 후 DB check 성공 (`notice_sites=1`)
 
 ## 이월
 

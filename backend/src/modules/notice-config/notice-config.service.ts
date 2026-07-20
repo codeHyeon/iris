@@ -1,7 +1,13 @@
 import { AppError } from '../../shared/errors/app-error.js'
+import { crawlNotices } from '../crawling/index.js'
 import { noticeConfigRepository } from './notice-config.repository.js'
+import type { TestCrawlBody } from './notice-config.schemas.js'
 
 export class NoticeConfigService {
+  async testCrawlNoticeConfig(_guildId: string, body: TestCrawlBody) {
+    return crawlNotices(body)
+  }
+
   async getNoticeConfig(guildId: string) {
     const noticeSite = await noticeConfigRepository.findByGuildId(guildId)
 
@@ -18,6 +24,7 @@ export class NoticeConfigService {
         linkSelector: noticeSite.linkSelector,
         dateSelector: noticeSite.dateSelector,
         categorySelector: noticeSite.categorySelector,
+        categoryListSelector: noticeSite.categoryListSelector,
       },
       categories: noticeSite.categories.map((category) => ({
         categoryId: category.id,

@@ -210,18 +210,30 @@
 
 ## 할 일
 
-- [ ] Axios/Cheerio crawler 기본 구현
-- [ ] selector 기반 notice 추출 구현
-- [ ] title/link/date/category 필수 검증 구현
-- [ ] DateTime 파싱 구현
-- [ ] relative link absolute URL 변환 구현
-- [ ] `POST /api/admin/{guildId}/notice-config/test` 구현
-- [ ] 테스트 크롤링 실패 케이스 응답 정리
-- [ ] 실제 공지 사이트 1개 기준 수동 테스트
+- [x] Axios/Cheerio crawler 기본 구현
+- [x] selector 기반 notice 추출 구현
+- [x] title/link/date/category 필수 검증 구현
+- [x] category list selector 기반 전체 카테고리 추출 구현
+- [x] DateTime 파싱 구현
+- [x] relative link absolute URL 변환 구현
+- [x] `POST /api/admin/{guildId}/notice-config/test` 구현
+- [x] 테스트 크롤링 실패 케이스 응답 정리
+- [x] 실제 공지 사이트 1개 기준 수동 테스트
 
 ## 이슈
 
 - 없음
+
+## 검증
+
+- `backend npm run type-check` 통과
+- `backend npm run lint` 통과
+- `backend npm run build` 통과
+- `frontend npm run lint` 통과
+- `frontend npm run build` 통과
+- 로컬 HTML fixture 기준 테스트 크롤링 API 성공
+- 미리보기 공지는 최신 5개만 반환하고, 카테고리는 `categoryListSelector` 기준 전체 목록에서 반환하는 것 확인
+- 경북대학교 컴퓨터학부 공지 사이트 기준 테스트 크롤링 API 성공
 
 ## 이월
 

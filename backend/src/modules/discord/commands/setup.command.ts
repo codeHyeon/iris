@@ -5,6 +5,7 @@ import { env } from '../../../config/env.js'
 export const setupCommand = new SlashCommandBuilder()
   .setName('setup')
   .setDescription('IRIS 관리자 설정 페이지 링크를 확인합니다.')
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export async function executeSetupCommand(interaction: ChatInputCommandInteraction) {
   if (!interaction.inGuild() || !interaction.guildId) {

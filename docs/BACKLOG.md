@@ -75,7 +75,7 @@
 
 ## 진행 중
 
-- [ ] Discord 이벤트와 Slash Command 골격 구현
+- [ ] `/help`, `/setup` 보완 및 Discord Slash Command 구현
 
 ## 미완료
 
@@ -93,7 +93,8 @@
 - API contract를 먼저 고정한 뒤 UI와 연동한다.
 - 기능 단위로 개발하고 테스트한다.
 - 도메인 모듈 기준으로 코드를 나눈다.
-- 배포는 마지막에 처음 시도하지 않고, 빈 앱 배포를 초반에 먼저 성공시킨다.
+- 실제 배포는 핵심 기능 개발과 QA 이후 최종 단계에서 진행한다.
+- 배포 방식과 환경 변수 구조는 초기에 결정하되, CI/Vercel/EC2 적용과 smoke test는 마지막에 수행한다.
 - AI 기능은 1차 MVP 이후 구현하되, 확장 가능한 위치만 예약한다.
 
 ---
@@ -109,8 +110,6 @@
 - [x] Frontend Vercel 배포 방식 결정
 - [x] Backend Docker/EC2 배포 방식 결정
 - [x] Backend health check API 작성
-- [ ] Backend Dockerfile 초안 작성
-- [ ] 빈 Backend 앱 EC2 실행 확인
 - [x] MySQL Docker 개발 환경 구성
 - [x] Production DB 연결 방식 정리
 - [x] Prisma migration 배포 방식 정리
@@ -136,7 +135,6 @@
 - [x] Role 이름 변경 구현
 - [x] Role 삭제 구현
 - [x] Bot Role hierarchy 에러 처리
-- [ ] EC2 환경에서 Discord Bot login 확인
 - [x] `guildDelete` 이벤트 DB 정리 구현
 
 ## Phase 4. Admin Web
@@ -149,7 +147,6 @@
 - [x] 기존 설정 조회 및 수정 흐름 구현
 - [x] 설정 완료 화면 구현
 - [x] 설정 삭제 UI 구현
-- [ ] Vercel preview 배포 확인
 - [x] Frontend API base URL 환경 변수 연결 확인
 - [x] Discord Bot 초대 링크 환경 변수 연결
 
@@ -188,6 +185,12 @@
 - [ ] 설정 삭제 후 데이터 정리 점검
 - [ ] 모바일/데스크톱 관리자 UI 점검
 - [ ] 배포 환경 변수 점검
+- [ ] Backend Dockerfile 작성
+- [ ] Backend 배포용 Docker Compose 작성
+- [ ] Frontend CI 및 Vercel 배포 workflow 작성
+- [ ] Vercel preview 배포 확인
+- [ ] Frontend preview smoke test
+- [ ] EC2 환경에서 Backend/Discord Bot 실행 확인
 - [ ] Production Backend smoke test
 - [ ] Production Frontend smoke test
 - [ ] Discord Bot production login 확인
@@ -202,7 +205,6 @@
 
 - 프로젝트 세팅
 - 배포 방식 결정
-- 빈 Backend 앱 EC2 실행
 - Prisma schema
 - 테스트 크롤링
 - notice-config 저장/조회
@@ -214,7 +216,6 @@
 ## P1
 
 - Admin Web 설정 흐름
-- Vercel preview 배포
 - `/setup`
 - `/subscribe`
 - Scheduler
@@ -245,7 +246,6 @@
 ## Week 1
 
 - 프로젝트 세팅
-- 빈 Backend 앱 배포 확인
 - Prisma schema
 - Production DB 연결 방식 정리
 - Backend notice-config API
@@ -268,6 +268,7 @@
 - 키워드 명령어와 DM 알림
 - 설정 수정/삭제
 - 실패 케이스 점검
+- Frontend/Backend 배포 준비
 - 최종 배포 smoke test
 - 발표 준비
 

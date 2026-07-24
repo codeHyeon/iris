@@ -307,8 +307,6 @@
 - [x] Role 삭제 구현
 - [x] 기존 Role 정리 흐름 구현
 - [x] `guildDelete` 이벤트 DB 정리 구현
-- [ ] Backend Dockerfile 초안 작성
-- [ ] Backend 배포용 Docker Compose 작성
 
 ## 이슈
 
@@ -372,11 +370,11 @@
 
 ---
 
-# Day 10. Admin Polish And Frontend Preview
+# Day 10. Admin Polish
 
 ## 목표
 
-- 관리자 화면의 UX, 반응형, 배포 preview를 점검한다.
+- 관리자 화면의 UX와 반응형을 점검한다.
 - Day 9 API 연동 후 화면 상태와 관리자 흐름을 안정화한다.
 
 ## 할 일
@@ -387,27 +385,27 @@
 - [x] 설정 완료 화면 요약 보완
 - [x] 모바일/데스크톱 반응형 1차 점검
 - [x] 주요 실패 케이스 UI 점검
-- [ ] Fork `personal-deploy` Frontend CI 및 Vercel 배포 workflow 작성
-- [ ] Vercel preview 배포 확인
-- [ ] Frontend preview smoke test
+- [x] 관리자 설정 UI 문구 정리
+- [x] 경북대학교 컴퓨터학부 기준 URL/selector 예시 반영
 
 ## 이슈
 
-- Frontend preview 배포와 CI/Vercel workflow는 별도 배포 단계에서 진행한다.
+- 실제 배포와 preview 확인은 모든 핵심 기능 개발 이후 최종 단계에서 진행한다.
 
 ## 이월
 
-- Fork `personal-deploy` Frontend CI 및 Vercel 배포 workflow 작성
+- Frontend CI 및 Vercel 배포 workflow 작성
 - Vercel preview 배포 확인
 - Frontend preview smoke test
 
 ---
 
-# Day 11. Discord Slash Commands
+# Day 11. Discord Commands And Scheduler Base
 
 ## 목표
 
 - Discord 사용자가 설정 링크, 카테고리 구독, 키워드 명령어를 사용할 수 있게 한다.
+- Scheduler와 신규 공지 중복 검사 기반을 미리 구현한다.
 
 ## 할 일
 
@@ -420,6 +418,10 @@
 - [ ] `/keyword add` 구현
 - [ ] `/keyword remove` 구현
 - [ ] `/keyword list` 구현
+- [ ] node-cron Scheduler 구현
+- [ ] 등록된 notice site 순회 구현
+- [ ] normalizedLink 생성 구현
+- [ ] `hashKey` 생성 및 중복 검사 구현
 - [ ] `/help`, `/setup`, `/subscribe`, `/keyword` 수동 테스트
 
 ## 이슈
@@ -436,16 +438,12 @@
 
 ## 목표
 
-- 30분 주기 크롤링과 Discord 알림을 연결한다.
+- Day 11에서 만든 Scheduler 기반 위에 Discord 알림을 연결한다.
 - 신규 공지 저장과 카테고리별 채널 알림을 완성한다.
 - 키워드 DM 알림을 연결한다.
 
 ## 할 일
 
-- [ ] node-cron Scheduler 구현
-- [ ] 등록된 notice site 순회 구현
-- [ ] normalizedLink 생성 구현
-- [ ] `hashKey` 생성 및 중복 검사 구현
 - [ ] 활성 카테고리 매칭 구현
 - [ ] 신규 공지 저장 구현
 - [ ] Discord Embed 알림 구현
@@ -469,11 +467,11 @@
 
 ---
 
-# Day 13. QA And Final Smoke Test
+# Day 13. QA, Deploy And Final Smoke Test
 
 ## 목표
 
-- MVP 안정화와 최종 배포 smoke test를 수행한다.
+- MVP 안정화 후 최종 배포와 smoke test를 수행한다.
 - Day 13에는 새 기능 구현보다 실패 케이스 점검과 전체 흐름 안정화를 우선한다.
 
 ## 할 일
@@ -486,6 +484,11 @@
 - [ ] Bot 제거 후 `guildDelete` 정리 점검
 - [ ] 모바일/데스크톱 UI 점검
 - [ ] 환경 변수 점검
+- [ ] Backend Dockerfile 작성
+- [ ] Backend 배포용 Docker Compose 작성
+- [ ] Fork `personal-deploy` Frontend CI 및 Vercel 배포 workflow 작성
+- [ ] Vercel preview 배포 확인
+- [ ] Frontend preview smoke test
 - [ ] Production Backend smoke test
 - [ ] Production Frontend smoke test
 - [ ] Discord Bot production login 확인

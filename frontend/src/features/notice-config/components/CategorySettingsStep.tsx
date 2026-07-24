@@ -46,7 +46,7 @@ export function CategorySettingsStep({
           <div className="table-row table-head">
             <span>카테고리</span>
             <span>채널</span>
-            <span>Role 이름</span>
+            <span>역할 이름</span>
             <span>활성화</span>
           </div>
           {categories.map((category) => (
@@ -88,7 +88,7 @@ export function CategorySettingsStep({
         </div>
       </section>
 
-      <p className="notice-box">활성화 OFF인 카테고리는 구독 및 알림 대상에서 제외됩니다.</p>
+      <p className="notice-box">비활성화한 카테고리는 구독 및 알림 대상에서 제외됩니다.</p>
 
       <div className="admin-actions">
         <div className="left-actions">

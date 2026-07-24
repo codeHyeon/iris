@@ -63,8 +63,8 @@ export function GuidePanel({ step }: { step: AdminStep }) {
         />
         <GuideStep
           number="03"
-          title="Role 설정"
-          description="활성화된 카테고리는 구독 Role 생성 대상이 됩니다."
+          title="역할 설정"
+          description="설정한 역할 이름으로 역할이 생성되고, 사용자가 카테고리를 구독하면 부여됩니다."
         />
       </div>
     </aside>

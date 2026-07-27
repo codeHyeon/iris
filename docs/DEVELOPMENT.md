@@ -62,6 +62,31 @@ The MVP focuses on building a working flow from notice site registration to Disc
 - Avoid using `any` for core domain data such as guilds, notice sites, categories, notices, subscriptions, and keywords.
 - Prisma schema remains the database source of truth, and TypeScript types should align with it.
 
+## Commit Convention
+
+커밋 메시지는 `type: 한국어 요약` 형식을 사용한다.
+
+- `feat`: 사용자 기능, API, 봇 동작, UI 동작 추가 또는 변경
+- `fix`: 버그 수정
+- `docs`: 문서만 변경
+- `style`: 동작 변경 없는 CSS, 포맷, UI 스타일 조정
+- `refactor`: 동작 변경 없는 코드 구조 개선
+- `test`: 테스트 추가 또는 수정
+- `chore`: 의존성, 스크립트, 설정, 빌드 작업
+
+커밋 전에는 `git status --short`로 변경 파일을 확인하고 기능 단위로 나눈다.
+
+문서 파일만 포함된 커밋은 반드시 `docs:`를 사용한다. `docs/`만 변경된 커밋에 `feat:`를 사용하지 않는다.
+
+예시:
+
+```text
+feat: 디스코드 구독과 키워드 알림 UX 구현
+docs: MVP 알림 흐름 문서 최신화
+fix: 키워드 삭제 확인 버튼 동작 수정
+chore: 백엔드 스케줄러 의존성 추가
+```
+
 ## Deployment
 
 ### Frontend

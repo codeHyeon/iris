@@ -142,7 +142,7 @@ Selectors:
 - linkSelector: `.bo_tit a`
 - dateSelector: `.td_datetime`
 - categorySelector: `.bo_cate_link`
-- categoryListSelector: `#bo_cate a`
+- categoryListSelector: `#bo_cate_ul a`
 
 Expected result:
 
@@ -211,6 +211,17 @@ Check saved notice config:
 ```bash
 curl -s "http://localhost:3000/api/admin/1524226987332206632/notice-config" | jq
 ```
+
+Run the notice scheduler once:
+
+```bash
+cd backend
+npm run scheduler:notice:run-once
+```
+
+- 첫 수집이면 공지를 저장만 하고 Discord 알림은 보내지 않는다.
+- 이후 실행에서는 새로 저장된 공지만 공통 알림 채널의 역할 mention과 키워드 DM 대상이 된다.
+- 기존 설정을 카테고리별 채널 구조에서 만들었다면 관리자 페이지에서 저장을 한 번 눌러 모든 카테고리의 `channelId`를 공통 알림 채널로 맞춘다.
 
 Admin page:
 

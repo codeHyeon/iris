@@ -31,7 +31,7 @@
 - 카테고리 구독
 - 키워드 알림
 - 30분 주기 Scheduler
-- Discord 채널 알림
+- 공통 알림 채널의 역할 mention 알림
 - 설정 삭제 및 Bot 제거 데이터 정리
 
 ## Future
@@ -75,14 +75,13 @@
 
 ## 진행 중
 
-- [ ] `/help`, `/setup` 보완 및 Discord Slash Command 구현
+- 없음
 
 ## 미완료
 
-- [ ] Discord Bot 구현
-- [ ] Scheduler 구현
-- [ ] Discord 알림 구현
-- [ ] 키워드 알림 구현
+- [ ] 실패 케이스 점검
+- [ ] 배포 환경 구성
+- [ ] Production smoke test
 
 ---
 
@@ -152,29 +151,36 @@
 
 ## Phase 5. Discord Commands
 
-- [ ] `/help` 구현
+- [x] `/help` 구현
 - [x] `/setup` 관리자 권한 확인 구현
-- [x] `/setup` Admin 링크 ephemeral 응답 구현
-- [ ] `/subscribe` active category 조회 구현
-- [ ] `/subscribe` multi-select interaction 구현
-- [ ] 구독 Role 부여/제거 구현
-- [ ] `/keyword add` 구현
-- [ ] `/keyword remove` 구현
-- [ ] `/keyword list` 구현
+- [x] `/setup` Admin 바로가기 버튼 ephemeral 응답 구현
+- [x] `/subscribe` active category 조회 구현
+- [x] `/subscribe` category button interaction 구현
+- [x] 구독 Role 부여/제거 구현
+- [x] `/keyword` 키워드 관리 UI 구현
+- [x] `/keyword` 추가 modal 구현
+- [x] `/keyword` 다중 선택 삭제 select menu 구현
+- [x] Discord slash command 정상 응답 Embed 디자인 통일
 
 ## Phase 6. Crawling And Notification
 
-- [ ] 30분 Scheduler 구현
-- [ ] 등록된 notice site 순회 구현
+- [x] 30분 Scheduler 구현
+- [x] 등록된 notice site 순회 구현
 - [x] selector 기반 공지 추출 구현
 - [x] DateTime 파싱 구현
-- [ ] normalizedLink 생성 구현
-- [ ] `hashKey` 중복 검사 구현
-- [ ] 활성 카테고리 공지 저장 구현
-- [ ] 카테고리별 Discord Embed 알림 구현
-- [ ] Role mention 구현
-- [ ] 키워드 제목 매칭 구현
-- [ ] 키워드 DM 알림 구현
+- [x] normalizedLink 생성 구현
+- [x] `hashKey` 중복 검사 구현
+- [x] 활성 카테고리 공지 저장 구현
+- [x] 공통 알림 채널 Discord Embed 알림 구현
+- [x] Role mention 구현
+- [x] 키워드 제목 매칭 구현
+- [x] 키워드 DM 알림 구현
+- [x] `전체` 카테고리 역할 mention 통합
+- [x] 새 Discord 역할 기본 색상 적용
+- [x] 키워드 DM 알림 2단계 삭제 버튼 구현
+- [x] 공지 채널 알림 개인 DM 복사 버튼 구현
+- [x] 공지 채널 알림 요약 준비 중 버튼 구현
+- [x] 개인 DM 공지 알림 요약 준비 중 버튼 구현
 
 ## Phase 7. QA And Release Prep
 
@@ -220,7 +226,7 @@
 - `/subscribe`
 - Scheduler
 - 공지 저장과 중복 검사
-- Discord 채널 알림
+- 공통 알림 채널의 역할 mention 알림
 
 ## P2
 
@@ -264,7 +270,7 @@
 
 ## Week 3
 
-- Discord 채널 알림
+- 공통 알림 채널의 역할 mention 알림
 - 키워드 명령어와 DM 알림
 - 설정 수정/삭제
 - 실패 케이스 점검
@@ -278,6 +284,7 @@
 
 - AI 공지 요약
 - AI Selector 추천 또는 자동 입력
+- 알림 채널을 `categories.channelId`가 아니라 사이트 단위 컬럼으로 분리
 - Discord OAuth
 - 한 Discord 서버에 여러 공지 사이트 지원
 - 관리자 대시보드

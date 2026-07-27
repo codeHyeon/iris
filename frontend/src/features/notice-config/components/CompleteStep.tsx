@@ -20,6 +20,8 @@ export function CompleteStep({
   const [isCategoryListExpanded, setIsCategoryListExpanded] = useState(false)
   const activeCategories = categories.filter((category) => category.isActive)
   const channelNameMap = new Map(discordChannels.map((channel) => [channel.id, channel.name]))
+  const notificationChannelId = categories.find((category) => category.channelId)?.channelId || ''
+  const notificationChannelName = channelNameMap.get(notificationChannelId) || '채널 미확인'
   const visibleCategories = isCategoryListExpanded
     ? categories
     : categories.slice(0, maxCollapsedCategoryCount)
@@ -44,6 +46,10 @@ export function CompleteStep({
             <dd>{activeCategories.length}개</dd>
           </div>
           <div>
+            <dt>알림 채널</dt>
+            <dd>{notificationChannelName}</dd>
+          </div>
+          <div>
             <dt>비활성 카테고리</dt>
             <dd>{categories.length - activeCategories.length}개</dd>
           </div>
@@ -55,7 +61,6 @@ export function CompleteStep({
         <div className="complete-category-list">
           <div className="complete-category-head" aria-hidden="true">
             <span>카테고리</span>
-            <span>채널</span>
             <span>역할</span>
           </div>
           {visibleCategories.map((category) => (
@@ -67,15 +72,9 @@ export function CompleteStep({
                 </span>
               </div>
               {category.isActive ? (
-                <>
-                  <p>{channelNameMap.get(category.channelId) || '채널 미확인'}</p>
-                  <p>{category.roleName || `IRIS-${category.name}`}</p>
-                </>
+                <p>{category.roleName || `IRIS-${category.name}`}</p>
               ) : (
-                <>
-                  <p>-</p>
-                  <p>-</p>
-                </>
+                <p>-</p>
               )}
             </article>
           ))}

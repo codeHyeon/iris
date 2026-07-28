@@ -117,6 +117,22 @@ jobs:
             docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d backend
             docker image prune -f
+
+            for i in $(seq 1 20); do
+              if curl -fsS http://127.0.0.1:3000/api/health; then
+                break
+              fi
+
+              docker logs iris-backend --tail 80 || true
+              sleep 3
+            done
+
+            curl -fsS http://127.0.0.1:3000/api/health
+            curl -fsS http://127.0.0.1/api/health || {
+              sudo tail -100 /var/log/nginx/error.log || true
+              sudo nginx -T | sed -n '1,220p' || true
+              exit 1
+            }
           EOF
 
       - name: Health check

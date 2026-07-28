@@ -22,7 +22,7 @@ function assertActiveCategoriesHaveRoles(categories: PreparedNoticeCategory[]) {
   const invalidCategory = categories.find((category) => category.isActive && !category.roleId)
 
   if (invalidCategory) {
-    throw new AppError(500, `Active category must have a Discord role: ${invalidCategory.name}`)
+    throw new AppError(500, `활성화된 카테고리에 Discord 역할이 없습니다: ${invalidCategory.name}`)
   }
 }
 
@@ -99,7 +99,7 @@ export class NoticeConfigService {
     const existingNoticeSite = await noticeConfigRepository.findByGuildId(guildId)
 
     if (existingNoticeSite) {
-      throw new AppError(409, 'Notice config already exists')
+      throw new AppError(409, '이미 공지 사이트 설정이 존재합니다.')
     }
 
     const { categories, createdRoleIds } = await this.prepareCategoriesWithRoles(guildId, body.categories)
@@ -126,7 +126,7 @@ export class NoticeConfigService {
     const noticeSite = await noticeConfigRepository.findByGuildId(guildId)
 
     if (!noticeSite) {
-      throw new AppError(404, 'Notice config not found')
+      throw new AppError(404, '공지 사이트 설정을 찾을 수 없습니다.')
     }
 
     return {
@@ -155,14 +155,14 @@ export class NoticeConfigService {
     const noticeSite = await noticeConfigRepository.findByGuildId(guildId)
 
     if (!noticeSite) {
-      throw new AppError(404, 'Notice config not found')
+      throw new AppError(404, '공지 사이트 설정을 찾을 수 없습니다.')
     }
 
     const categoryIds = body.categories.map((category) => category.categoryId)
     const uniqueCategoryIds = new Set(categoryIds)
 
     if (uniqueCategoryIds.size !== categoryIds.length) {
-      throw new AppError(400, 'Duplicate category id')
+      throw new AppError(400, '중복된 카테고리 ID가 있습니다.')
     }
 
     const existingCategories = await noticeConfigRepository.findCategoriesByNoticeSiteId(
@@ -171,7 +171,7 @@ export class NoticeConfigService {
     )
 
     if (existingCategories.length !== categoryIds.length) {
-      throw new AppError(404, 'Notice category not found')
+      throw new AppError(404, '공지 카테고리를 찾을 수 없습니다.')
     }
 
     const existingCategoryMap = new Map(
@@ -183,7 +183,7 @@ export class NoticeConfigService {
       const existingCategory = existingCategoryMap.get(category.categoryId)
 
       if (!existingCategory) {
-        throw new AppError(404, 'Notice category not found')
+        throw new AppError(404, '공지 카테고리를 찾을 수 없습니다.')
       }
 
       await discordService.validateTextChannel(guildId, category.channelId)
@@ -249,7 +249,7 @@ export class NoticeConfigService {
     const noticeSite = await noticeConfigRepository.findByGuildId(guildId)
 
     if (!noticeSite) {
-      throw new AppError(404, 'Notice config not found')
+      throw new AppError(404, '공지 사이트 설정을 찾을 수 없습니다.')
     }
 
     const oldRoleIds = noticeSite.categories.flatMap((category) => (category.roleId ? [category.roleId] : []))
@@ -279,7 +279,7 @@ export class NoticeConfigService {
     const noticeSite = await noticeConfigRepository.findByGuildId(guildId)
 
     if (!noticeSite) {
-      throw new AppError(404, 'Notice config not found')
+      throw new AppError(404, '공지 사이트 설정을 찾을 수 없습니다.')
     }
 
     const roleIds = noticeSite.categories.flatMap((category) => (category.roleId ? [category.roleId] : []))

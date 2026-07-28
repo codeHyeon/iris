@@ -326,10 +326,10 @@ hub
 │       │   │   └── link-normalizer.ts
 │       │   ├── discord
 │       │   │   ├── discord.client.ts
-│       │   │   ├── discord-role.service.ts
-│       │   │   ├── discord-channel.service.ts
+│       │   │   ├── discord.service.ts
 │       │   │   └── commands
 │       │   │       ├── help.command.ts
+│       │   │       ├── guide.command.ts
 │       │   │       ├── setup.command.ts
 │       │   │       ├── subscribe.command.ts
 │       │   │       └── keyword.command.ts

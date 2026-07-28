@@ -152,6 +152,7 @@
 ## Phase 5. Discord Commands
 
 - [x] `/help` 구현
+- [x] `/guide` 권한, 알림, 개인정보 설정 안내 구현
 - [x] `/setup` 관리자 권한 확인 구현
 - [x] `/setup` 관리자 바로가기 버튼 Ephemeral 응답 구현
 - [x] `/subscribe` active category 조회 구현

@@ -76,7 +76,7 @@ Scheduler
 
 ## Discord Bot
 
-- `/help`, `/setup`, `/subscribe`, `/keyword` 처리
+- `/help`, `/guide`, `/setup`, `/subscribe`, `/keyword` 처리
 - `/setup` 실행자의 서버 관리자 권한 확인
 - `/subscribe` 카테고리 버튼 interaction 처리
 - 구독 변경에 따른 Discord 역할 부여/제거

@@ -120,7 +120,7 @@ Category 설정
 
 ⑤ 사용자는 Discord 명령어로 조작한다.
 
-/help, /setup, /subscribe, /keyword 화면은 실제 Discord 사용 흐름을 미리 볼 수 있도록 Dark UI 안에 Bot Card 형태로 표현한다.
+/help, /guide, /setup, /subscribe, /keyword 화면은 실제 Discord 사용 흐름을 미리 볼 수 있도록 Dark UI 안에 Bot Card 형태로 표현한다.
 
 ---
 
@@ -562,7 +562,9 @@ Main 영역만 세로 스크롤되며 Sidebar와 Guide는 화면에 유지된다
 
 Table
 
-알림 채널
+알림 채널은 감지된 카테고리 목록과 분리된 별도 카드로 표시한다.
+
+감지된 카테고리 목록
 
 카테고리
 
@@ -672,6 +674,8 @@ Command List
 
 /keyword
 
+/guide
+
 Button
 
 처음으로 이동
@@ -714,6 +718,34 @@ Discord Dark Window
 /subscribe
 
 /keyword
+
+/guide
+
+---
+
+## S5-1 Discord
+
+/guide
+
+목적
+
+권한, 알림 방식, 개인정보 설정, 설정 삭제 주의사항을 안내한다.
+
+UI
+
+Discord Dark Window
+
+보라색 Embed Bot Card
+
+안내 항목
+
+권한 설정
+
+알림 설정
+
+개인정보 설정
+
+설정 삭제
 
 ---
 
@@ -859,6 +891,8 @@ UI
 /subscribe
 
 /keyword
+
+/guide
 
 ---
 

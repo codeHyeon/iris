@@ -411,6 +411,7 @@
 ## 할 일
 
 - [x] `/help` 구현
+- [x] `/guide` 사용 안내 명령어 구현
 - [x] `/setup` 관리자 권한 확인 구현 보완
 - [x] `/setup` 관리자 바로가기 버튼 Ephemeral 응답 구현 보완
 - [x] `/subscribe` active category 조회 구현
@@ -420,6 +421,7 @@
 - [x] `/keyword` 추가 모달 구현
 - [x] `/keyword` 다중 선택 삭제 메뉴 구현
 - [x] `/help`, `/setup`, `/subscribe`, `/keyword` 정상 응답 보라색 Embed 디자인 통일
+- [x] `/guide` 권한, 알림, 개인정보 설정 안내 구현
 - [x] node-cron Scheduler 구현
 - [x] 등록된 notice site 순회 구현
 - [x] normalizedLink 생성 구현

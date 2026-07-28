@@ -112,7 +112,8 @@ jobs:
 
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d mysql
             docker compose --env-file .env.production -f docker-compose.prod.yml build backend
-            docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'printf "CREATE USER IF NOT EXISTS '\''%s'\''@'\''%%'\'' IDENTIFIED BY '\''%s'\''; ALTER USER '\''%s'\''@'\''%%'\'' IDENTIFIED BY '\''%s'\''; GRANT ALL PRIVILEGES ON %s.* TO '\''%s'\''@'\''%%'\''; FLUSH PRIVILEGES;" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_DATABASE" "$MYSQL_USER" | mysql -uroot -p"$MYSQL_ROOT_PASSWORD"'
+            docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'until mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent; do sleep 2; done'
+            docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'printf "CREATE USER IF NOT EXISTS '\''%s'\''@'\''%%'\'' IDENTIFIED BY '\''%s'\''; ALTER USER '\''%s'\''@'\''%%'\'' IDENTIFIED BY '\''%s'\''; GRANT ALL PRIVILEGES ON %s.* TO '\''%s'\''@'\''%%'\''; FLUSH PRIVILEGES;" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_DATABASE" "$MYSQL_USER" | mysql -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD"'
             docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d backend
             docker image prune -f

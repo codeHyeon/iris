@@ -89,6 +89,8 @@ chore: 백엔드 스케줄러 의존성 추가
 
 ## Deployment
 
+운영 배포 절차는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 기준으로 관리한다.
+
 ### Frontend
 
 - Vercel

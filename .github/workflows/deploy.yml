@@ -1,0 +1,102 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - deploy
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Verify backend
+        working-directory: backend
+        run: |
+          npm run lint
+          npm run type-check
+          npm run build
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Verify frontend
+        working-directory: frontend
+        run: |
+          npm run lint
+          npm run build
+
+      - name: Verify Docker Compose config
+        run: docker compose --env-file .env.production.example -f docker-compose.prod.yml config
+
+      - name: Verify backend Docker image build
+        run: docker build -f backend/Dockerfile backend
+
+  deploy-backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    needs: verify
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/iris_ec2
+          chmod 600 ~/.ssh/iris_ec2
+
+      - name: Deploy on EC2
+        run: |
+          ssh -i ~/.ssh/iris_ec2 -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<'EOF'
+            set -e
+
+            APP_DIR="$HOME/hub"
+
+            if [ ! -d "$APP_DIR/.git" ]; then
+              git clone git@github.com:${{ github.repository }}.git "$APP_DIR"
+            fi
+
+            cd "$APP_DIR"
+            git fetch origin deploy
+            git reset --hard origin/deploy
+
+            cat > .env.production <<'ENVEOF'
+          NODE_ENV=${{ secrets.NODE_ENV }}
+          PORT=${{ secrets.PORT }}
+          BACKEND_PORT=${{ secrets.BACKEND_PORT }}
+          MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER=${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CLIENT_ID=${{ secrets.DISCORD_CLIENT_ID }}
+          ADMIN_WEB_URL=${{ secrets.ADMIN_WEB_URL }}
+          ENVEOF
+
+            chmod 600 .env.production
+
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d mysql
+            docker compose --env-file .env.production -f docker-compose.prod.yml build backend
+            docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d backend
+            docker image prune -f
+          EOF
+
+      - name: Health check
+        run: |
+          curl --fail --retry 10 --retry-delay 5 --retry-connrefused http://${{ secrets.EC2_HOST }}/api/health

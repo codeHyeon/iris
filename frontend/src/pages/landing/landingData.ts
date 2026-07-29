@@ -20,7 +20,7 @@ export const featureCards: FeatureCard[] = [
   },
   {
     title: '카테고리 알림',
-    description: '카테고리별 Discord 채널과 역할을 연결하고 알림을 받습니다.',
+    description: '관심 카테고리를 구독하고 역할 멘션 알림을 받습니다.',
     icon: 'hash',
   },
   {

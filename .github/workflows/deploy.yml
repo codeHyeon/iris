@@ -117,7 +117,21 @@ jobs:
             docker compose --env-file .env.production -f docker-compose.prod.yml build backend
 
             echo "== Wait for MySQL =="
-            docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'until mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent; do sleep 2; done'
+            MYSQL_READY=0
+            for i in $(seq 1 30); do
+              if docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent; then
+                MYSQL_READY=1
+                break
+              fi
+
+              sleep 2
+            done
+
+            if [ "$MYSQL_READY" -ne 1 ]; then
+              echo "MySQL did not become ready in time"
+              docker logs iris-mysql-prod --tail 100 || true
+              exit 1
+            fi
 
             echo "== Grant MySQL permissions =="
             docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'printf "CREATE USER IF NOT EXISTS '\''%s'\''@'\''%%'\'' IDENTIFIED BY '\''%s'\''; ALTER USER '\''%s'\''@'\''%%'\'' IDENTIFIED BY '\''%s'\''; GRANT ALL PRIVILEGES ON %s.* TO '\''%s'\''@'\''%%'\''; FLUSH PRIVILEGES;" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_USER" "$MYSQL_PASSWORD" "$MYSQL_DATABASE" "$MYSQL_USER" | mysql -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD"'

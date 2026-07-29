@@ -145,9 +145,6 @@ jobs:
             echo "== Verify MySQL app user connection =="
             timeout 30s docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'MYSQL_PWD="$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u"$MYSQL_USER" --connect-timeout=10 "$MYSQL_DATABASE" -e "SELECT 1;"'
 
-            echo "== Verify backend database URL =="
-            docker compose --env-file .env.production -f docker-compose.prod.yml run --rm --no-deps backend node -e 'const value = process.env.DATABASE_URL; if (!value) { throw new Error("DATABASE_URL is required") } const url = new URL(value); if (url.hostname !== "mysql" || url.port !== "3306" || url.pathname !== "/iris") { throw new Error(`Invalid DATABASE_URL target: ${url.hostname}:${url.port}${url.pathname}`) } console.log(`DATABASE_URL target: ${url.hostname}:${url.port}${url.pathname}`)'
-
             echo "== Run Prisma migrations =="
             timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
 

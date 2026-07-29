@@ -258,11 +258,6 @@ export class DiscordService {
           .setDescription(`매칭된 키워드: ${input.matchedKeywords.join(', ')}`)
           .addFields(
             {
-              name: '사이트',
-              value: input.siteName,
-              inline: true,
-            },
-            {
               name: '카테고리',
               value: input.categoryName,
               inline: true,

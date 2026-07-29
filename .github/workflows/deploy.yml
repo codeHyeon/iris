@@ -125,7 +125,7 @@ jobs:
             echo "== Build backend image completed =="
 
             echo "== Run Prisma migrations =="
-            timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run -T --rm backend npm run db:deploy
+            timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run -T --rm --no-deps backend sh -lc 'npm run db:deploy' </dev/null
             echo "== Run Prisma migrations completed =="
 
             echo "== Start backend =="

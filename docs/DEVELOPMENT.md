@@ -135,7 +135,7 @@ docker-compose up -d mysql
 cd backend
 npm run db:migrate
 npm run db:seed
-npm run db:check
+npm run db:check:dev
 ```
 
 - Local `DATABASE_URL`: `mysql://iris:iris@localhost:3307/iris`
@@ -245,7 +245,7 @@ curl -s "http://localhost:3000/api/admin/1524226987332206632/notice-config" | jq
 
 ```bash
 cd backend
-npm run scheduler:notice:run-once
+npm run scheduler:notice:run-once:dev
 ```
 
 - 첫 수집이면 공지를 저장만 하고 Discord 알림은 보내지 않는다.

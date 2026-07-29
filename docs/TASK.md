@@ -258,7 +258,7 @@
 - [x] 저장/조회 API 수동 테스트
 - [x] `DELETE /api/admin/{guildId}/notice-config` 기본 삭제 구현
 - [x] 삭제 후 관련 categories/notices/subscriptions 정리 확인
-- [x] 설정 삭제 시 guildId 기준 keywords 정리 구현
+- [x] 설정 삭제 시 키워드 유지 정책 반영
 
 ## 이슈
 

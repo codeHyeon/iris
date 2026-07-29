@@ -160,7 +160,7 @@ Discord:
 Notice site:
 
 - siteName: `경북대학교 컴퓨터학부`
-- url: `https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&lang=kor`
+- url: `https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor`
 
 Selectors:
 

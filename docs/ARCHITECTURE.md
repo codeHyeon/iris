@@ -81,6 +81,7 @@ Scheduler
 - `/subscribe` 카테고리 버튼 interaction 처리
 - 구독 변경에 따른 Discord 역할 부여/제거
 - Bot 제거 시 `guildDelete` 이벤트를 받아 해당 서버 DB 데이터 정리
+- 사용자 서버 이탈 시 `guildMemberRemove` 이벤트를 받아 해당 사용자의 구독과 키워드 정리
 
 ## Crawler And Scheduler
 
@@ -242,13 +243,18 @@ Scheduler
 관리자가 설정 삭제
   -> DELETE /api/admin/{guildId}/notice-config
   -> IRIS가 생성한 Discord 역할 삭제
-  -> 공지 사이트, 카테고리, 공지, 구독, 키워드 삭제
+  -> 공지 사이트, 카테고리, 공지, 구독 삭제
+  -> 키워드는 유지
   -> guild를 설정 전 초기 상태로 복구
 
 Bot이 먼저 제거된 경우
   -> Bot이 guildDelete 이벤트 수신
-  -> 해당 guild의 DB 데이터 삭제
+  -> 해당 guild의 공지 설정, 구독, 키워드 DB 데이터 삭제
   -> guild 접근 권한이 없으므로 Discord 역할 삭제는 건너뜀
+
+사용자가 guild를 나간 경우
+  -> Bot이 guildMemberRemove 이벤트 수신
+  -> 해당 guild의 사용자 구독, 키워드 삭제
 ```
 
 ## Summary Button Flow

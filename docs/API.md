@@ -46,7 +46,7 @@ Content-Type: application/json
 **Rules**
 
 - 시작 가이드는 랜딩 카드 영역을 전환해 표시한다.
-- 시작 가이드는 Discord Bot 초대, 권한 승인, `/setup` 입력, 관리자 페이지 접속까지만 안내한다.
+- 시작 가이드는 사전 준비, Discord Bot 초대 및 권한 승인, `/setup` 입력, 관리자 페이지 접속까지만 안내한다.
 - 공지 사이트 등록, 카테고리 설정, 채널 선택 안내는 관리자 페이지 내부 가이드에서 처리한다.
 
 
@@ -77,7 +77,7 @@ POST /api/admin/{guildId}/notice-config/test
 ```json
 {
   "name": "경북대학교 컴퓨터학부",
-  "url": "https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&lang=kor",
+  "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor",
   "listSelector": ".basic_tbl_head tbody > tr",
   "titleSelector": ".bo_tit a",
   "linkSelector": ".bo_tit a",
@@ -144,7 +144,7 @@ POST /api/admin/{guildId}/selector-help-requests
 {
   "email": "admin@example.com",
   "siteName": "경북대학교 컴퓨터학부",
-  "url": "https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&lang=kor"
+  "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor"
 }
 ```
 
@@ -257,7 +257,7 @@ GET /api/admin/{guildId}/notice-config
     "data": {
         "site": {
             "name": "경북대학교 컴퓨터학부",
-            "url": "https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&lang=kor",
+            "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor",
             "listSelector": ".basic_tbl_head tbody > tr",
             "titleSelector": ".bo_tit a",
             "linkSelector": ".bo_tit a",
@@ -322,7 +322,7 @@ PUT /api/admin/{guildId}/notice-config
 {
   "site": {
     "name": "경북대학교 컴퓨터학부",
-    "url": "https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&lang=kor",
+    "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor",
     "listSelector": ".basic_tbl_head tbody > tr",
     "titleSelector": ".bo_tit a",
     "linkSelector": ".bo_tit a",
@@ -470,8 +470,8 @@ PATCH /api/admin/{guildId}/notice-config/categories
 
 ## 3.6 전체 설정 삭제
 
-현재 Discord 서버에 등록된 IRIS 설정과 관련 데이터를 모두 삭제하여 서비스를 초기화합니다.
-관리자가 더 이상 해당 서버에서 IRIS 알림 서비스를 사용하지 않거나, 처음부터 다시 설정하려는 경우 사용합니다.
+현재 Discord 서버에 등록된 공지 사이트 설정을 삭제하여 사이트 등록 단계부터 다시 설정할 수 있게 합니다.
+관리자가 공지 사이트 URL 또는 Selector를 처음부터 다시 잡으려는 경우 사용합니다.
 
 ```http
 DELETE /api/admin/{guildId}/notice-config
@@ -495,7 +495,7 @@ DELETE /api/admin/{guildId}/notice-config
 - 카테고리 설정을 삭제합니다.
 - 저장된 공지 이력을 (notice) 삭제합니다.
 - 카테고리 구독 정보를 삭제합니다.
-- 사용자 키워드 설정을 삭제합니다.
+- 사용자 키워드 설정은 삭제하지 않습니다.
 - 저장된 Discord 역할을 삭제합니다.
 - Discord 역할 삭제 또는 DB 데이터 삭제 중 오류가 발생하면 삭제 실패로 처리합니다.
 - 삭제가 완료되면 해당 Discord 서버는 공지 사이트를 등록하지 않은 초기 상태가 됩니다.
@@ -596,7 +596,7 @@ GET /api/admin/{guildId}/discord/channels
 - 역할 관리 권한이 없으면 구독 역할 부여와 해제가 실패할 수 있음을 안내합니다.
 - 키워드 알림은 개인 DM으로 전송된다고 안내합니다.
 - Discord 개인정보 설정에서 서버 멤버의 DM을 차단하면 키워드 알림을 받을 수 없고, 공지를 DM으로 저장할 수 없음을 안내합니다.
-- 설정 삭제 시 카테고리, 구독, 키워드, 수집 공지 데이터가 함께 삭제됨을 안내합니다.
+- 설정 삭제 시 공지 사이트, 카테고리, 구독, 수집 공지 데이터가 삭제되고 키워드는 유지됨을 안내합니다.
 
 ---
 

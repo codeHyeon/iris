@@ -430,12 +430,12 @@ Feature
 
 시작 가이드 카드
 
-1. 봇 초대하기
+1. 사전 준비
    - Step Number: 01
-   - Description: 랜딩의 Discord 봇 초대하기 버튼으로 IRIS Bot을 서버에 추가한다.
-2. 권한 승인
+   - Description: Discord에 가입하고 공지 알림을 받을 서버와 채널을 준비한다.
+2. 봇 초대하기
    - Step Number: 02
-   - Description: Discord 안내에 따라 서버와 Bot 권한을 확인하고 초대를 완료한다.
+   - Description: Discord 봇 초대하기 버튼으로 IRIS Bot을 서버에 추가하고 필요한 권한을 승인한다.
 3. /setup 입력
    - Step Number: 03
    - Description: 봇을 초대한 서버에서 관리자 권한으로 /setup 명령어를 입력한다.
@@ -485,7 +485,7 @@ Main
 입력란은 실제 값이 채워진 상태가 아니라 placeholder 예시로 표시한다.
 
 - 예: 경북대학교 컴퓨터학부
-- 예: https://cse.knu.ac.kr/bbs/board.php?bo_table=sub5_1&lang=kor
+- 예: https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor
 
 Selector 설정
 
@@ -687,7 +687,8 @@ Next Guide Card
 
 Summary
 
-- 공지 사이트, 활성 카테고리 수, 비활성 카테고리 수를 표시한다.
+- 공지 사이트와 알림 채널을 표시한다.
+- 활성/비활성 카테고리 숫자는 표시하지 않는다.
 - 카테고리 연결 요약에는 카테고리명, 활성 상태, 역할 이름을 표시한다.
 - 카테고리 연결 목록은 5개까지 기본 표시하고, 6개 이상이면 전체 보기/접기 버튼을 제공한다.
 

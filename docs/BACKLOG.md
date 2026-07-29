@@ -79,9 +79,9 @@
 
 ## 미완료
 
-- [ ] 실패 케이스 점검
-- [ ] 배포 환경 구성
-- [ ] Production smoke test
+- [x] 실패 케이스 점검
+- [x] 배포 환경 구성
+- [x] Production smoke test
 
 ---
 
@@ -172,6 +172,8 @@
 - [x] normalizedLink 생성 구현
 - [x] `hashKey` 중복 검사 구현
 - [x] 활성 카테고리 공지 저장 구현
+- [x] 공지 사이트 설정 저장/교체 직후 초기 수집 구현
+- [x] 초기 수집 시 알림 생략 처리
 - [x] 공통 알림 채널 Discord Embed 알림 구현
 - [x] 역할 mention 구현
 - [x] 키워드 제목 매칭 구현
@@ -185,24 +187,27 @@
 
 ## Phase 7. QA And Release Prep
 
-- [ ] 테스트 크롤링 실패 케이스 점검
-- [ ] 역할 생성 실패 케이스 점검
-- [ ] Discord 채널 접근 실패 케이스 점검
-- [ ] DM 실패 케이스 점검
-- [ ] 설정 삭제 후 데이터 정리 점검
-- [ ] 모바일/데스크톱 관리자 UI 점검
-- [ ] 배포 환경 변수 점검
-- [ ] Backend Dockerfile 작성
-- [ ] Backend 배포용 Docker Compose 작성
-- [ ] Frontend CI 및 Vercel 배포 workflow 작성
-- [ ] Vercel preview 배포 확인
-- [ ] Frontend preview smoke test
-- [ ] EC2 환경에서 Backend/Discord Bot 실행 확인
-- [ ] Production Backend smoke test
-- [ ] Production Frontend smoke test
-- [ ] Discord Bot production login 확인
-- [ ] Prisma migration 상태 확인
-- [ ] 최종 점검 시나리오 확인
+- [x] 테스트 크롤링 실패 케이스 점검
+- [x] 역할 생성 실패 케이스 점검
+- [x] Discord 채널 접근 실패 케이스 점검
+- [x] DM 실패 케이스 점검
+- [x] 설정 삭제 후 데이터 정리 점검
+- [x] 모바일/데스크톱 관리자 UI 점검
+- [x] 배포 환경 변수 점검
+- [x] Backend Dockerfile 작성
+- [x] Backend 배포용 Docker Compose 작성
+- [x] Frontend Vercel 배포 설정 작성
+- [x] Vercel production 배포 확인
+- [x] Frontend production smoke test
+- [x] EC2 환경에서 Backend/Discord Bot 실행 확인
+- [x] Production Backend smoke test
+- [x] Production Frontend smoke test
+- [x] Discord Bot production login 확인
+- [x] Prisma migration 상태 확인
+- [x] Backend 컨테이너 재생성 상태 추적 로그 추가
+- [x] 키워드 DM 알림 사이트명 제거
+- [x] 공지 사이트 설정 저장/교체 직후 초기 수집 누락 수정
+- [x] 최종 점검 시나리오 확인
 
 ---
 

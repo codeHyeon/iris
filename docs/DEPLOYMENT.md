@@ -154,14 +154,19 @@ EC2에서 수동으로 확인할 때는 다음 명령을 사용한다.
 
 ```bash
 docker compose --env-file .env.production -f docker-compose.prod.yml config
-docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
+docker compose --env-file .env.production -f docker-compose.prod.yml up -d mysql
+docker compose --env-file .env.production -f docker-compose.prod.yml build backend
+docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build --force-recreate backend
 ```
 
-DB migration은 Backend container 안에서 실행한다.
+배포 workflow는 backend 시작 전에 Prisma migration을 실행한다.
+SSH heredoc 환경에서 `docker compose run`이 stdin/attach를 붙잡지 않도록 `-T`, `--no-deps`, `</dev/null`을 사용한다.
 
 ```bash
-docker compose --env-file .env.production -f docker-compose.prod.yml exec backend npm run db:deploy
+docker compose --env-file .env.production -f docker-compose.prod.yml run -T --rm --no-deps backend sh -lc 'npm run db:deploy' </dev/null
 ```
+
+Backend container는 배포마다 새 이미지로 재생성한다. 배포 로그에서는 재생성 전후 container id, image id, `StartedAt`을 출력하며, container id가 바뀌지 않으면 CD를 실패 처리한다.
 
 컨테이너 상태 확인:
 
@@ -169,6 +174,7 @@ docker compose --env-file .env.production -f docker-compose.prod.yml exec backen
 docker compose -f docker-compose.prod.yml ps
 docker logs iris-backend --tail 100
 docker logs iris-mysql-prod --tail 100
+docker inspect iris-backend --format 'id={{.Id}} image={{.Image}} started={{.State.StartedAt}}'
 ```
 
 ---
@@ -235,12 +241,13 @@ Output Directory: dist
 운영 환경 변수:
 
 ```text
-VITE_API_BASE_URL=/api
 VITE_DISCORD_INVITE_URL=<Discord Bot invite URL>
 VITE_SELECTOR_GUIDE_URL=<Selector guide URL>
 ```
 
 Vercel rewrite는 `/api/:path*` 요청을 EC2 Backend로 전달한다.
+Frontend API 기본 경로는 코드에서 `/api`를 사용하므로, rewrite 방식을 사용할 때 `VITE_API_BASE_URL`은 설정하지 않는다.
+이미 Vercel에 `VITE_API_BASE_URL`이 등록되어 있다면 삭제하거나 `/api`로 맞춘 뒤 redeploy한다.
 
 ```text
 /api/:path* -> http://<EC2_ELASTIC_IP>/api/:path*

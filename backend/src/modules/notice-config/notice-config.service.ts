@@ -4,6 +4,7 @@ import { crawlNotices } from '../crawling/index.js'
 import { toNoticePreview } from '../crawling/notice-normalizer.js'
 import { discordService, getDefaultIrisRoleName } from '../discord/discord.service.js'
 import { keywordRepository } from '../keyword/keyword.repository.js'
+import { collectNoticeSiteNotices } from '../scheduler/notice-scheduler.js'
 import { subscriptionRepository } from '../subscription/subscription.repository.js'
 import { noticeConfigRepository } from './notice-config.repository.js'
 import type {
@@ -108,11 +109,13 @@ export class NoticeConfigService {
     assertActiveCategoriesHaveRoles(categories)
 
     try {
-      await noticeConfigRepository.createNoticeConfig({
+      const noticeSite = await noticeConfigRepository.createNoticeConfig({
         guildId,
         site: body.site,
         categories,
       })
+
+      await collectNoticeSiteNotices(noticeSite)
     } catch (error) {
       await Promise.allSettled(createdRoleIds.map((roleId) => discordService.deleteRole(guildId, roleId)))
 
@@ -259,11 +262,13 @@ export class NoticeConfigService {
     assertActiveCategoriesHaveRoles(categories)
 
     try {
-      await noticeConfigRepository.replaceNoticeConfig({
+      const noticeSite = await noticeConfigRepository.replaceNoticeConfig({
         guildId,
         site: body.site,
         categories,
       })
+
+      await collectNoticeSiteNotices(noticeSite)
     } catch (error) {
       await Promise.allSettled(createdRoleIds.map((roleId) => discordService.deleteRole(guildId, roleId)))
 

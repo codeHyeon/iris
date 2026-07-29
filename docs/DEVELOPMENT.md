@@ -120,7 +120,9 @@ Copy-Item frontend/.env.example frontend/.env
 ```
 
 - Backend: `NODE_ENV`, `PORT`, `DATABASE_URL`, `DISCORD_BOT_TOKEN`, `DISCORD_CLIENT_ID`, `ADMIN_WEB_URL`
-- Frontend: `VITE_API_BASE_URL`, `VITE_DISCORD_INVITE_URL`, `VITE_SELECTOR_GUIDE_URL`
+- Frontend local: `VITE_API_BASE_URL`
+- Frontend production: `VITE_DISCORD_INVITE_URL`, `VITE_SELECTOR_GUIDE_URL`
+- Vercel rewrite를 사용할 때 production `VITE_API_BASE_URL`은 설정하지 않거나 `/api`로 둔다.
 - `.env`와 `.env.*`는 커밋하지 않으며, 공유 가능한 예시 파일인 `.env.example`만 버전 관리한다.
 - 실제 Discord 토큰과 운영 DB 접속 정보는 로컬 `.env` 또는 배포 플랫폼의 환경 변수에만 저장한다.
 

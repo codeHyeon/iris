@@ -80,7 +80,7 @@
 ## 미완료
 
 - [ ] 실패 케이스 점검
-- [ ] 배포 환경 구성
+- [x] 배포 환경 구성
 - [ ] Production smoke test
 
 ---
@@ -191,17 +191,19 @@
 - [ ] DM 실패 케이스 점검
 - [ ] 설정 삭제 후 데이터 정리 점검
 - [ ] 모바일/데스크톱 관리자 UI 점검
-- [ ] 배포 환경 변수 점검
-- [ ] Backend Dockerfile 작성
-- [ ] Backend 배포용 Docker Compose 작성
-- [ ] Frontend CI 및 Vercel 배포 workflow 작성
-- [ ] Vercel preview 배포 확인
-- [ ] Frontend preview smoke test
-- [ ] EC2 환경에서 Backend/Discord Bot 실행 확인
-- [ ] Production Backend smoke test
-- [ ] Production Frontend smoke test
-- [ ] Discord Bot production login 확인
-- [ ] Prisma migration 상태 확인
+- [x] 배포 환경 변수 점검
+- [x] Backend Dockerfile 작성
+- [x] Backend 배포용 Docker Compose 작성
+- [x] Frontend Vercel 배포 설정 작성
+- [x] Vercel production 배포 확인
+- [x] Frontend production smoke test
+- [x] EC2 환경에서 Backend/Discord Bot 실행 확인
+- [x] Production Backend smoke test
+- [x] Production Frontend smoke test
+- [x] Discord Bot production login 확인
+- [x] Prisma migration 상태 확인
+- [x] Backend 컨테이너 재생성 상태 추적 로그 추가
+- [x] 키워드 DM 알림 사이트명 제거
 - [ ] 최종 점검 시나리오 확인
 
 ---

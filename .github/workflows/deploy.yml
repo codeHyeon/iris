@@ -119,7 +119,10 @@ jobs:
             echo "== Wait for MySQL =="
             MYSQL_READY=0
             for i in $(seq 1 30); do
-              if docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent'; then
+              MYSQL_STATUS=$(docker inspect --format '{{.State.Health.Status}}' iris-mysql-prod 2>/dev/null || echo "missing")
+              echo "MySQL status: $MYSQL_STATUS"
+
+              if [ "$MYSQL_STATUS" = "healthy" ]; then
                 MYSQL_READY=1
                 break
               fi

@@ -76,6 +76,7 @@ jobs:
 
             APP_DIR="$HOME/hub"
 
+            echo "== Sync repository =="
             if [ ! -d "$APP_DIR/.git" ]; then
               git clone git@github.com:${{ github.repository }}.git "$APP_DIR"
             fi
@@ -83,7 +84,9 @@ jobs:
             cd "$APP_DIR"
             git fetch origin deploy
             git reset --hard origin/deploy
+            echo "== Sync repository completed =="
 
+            echo "== Write production env =="
             cat > .env.production <<'ENVEOF'
           NODE_ENV=${{ secrets.NODE_ENV }}
           PORT=${{ secrets.PORT }}
@@ -99,7 +102,9 @@ jobs:
           ENVEOF
 
             chmod 600 .env.production
+            echo "== Write production env completed =="
 
+            echo "== Prepare swap =="
             if ! swapon --show | grep -q '^'; then
               if [ ! -f /swapfile ]; then
                 sudo fallocate -l 2G /swapfile
@@ -109,21 +114,27 @@ jobs:
 
               sudo swapon /swapfile
             fi
+            echo "== Prepare swap completed =="
 
             echo "== Start MySQL =="
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d mysql
+            echo "== Start MySQL completed =="
 
             echo "== Build backend image =="
             docker compose --env-file .env.production -f docker-compose.prod.yml build backend
+            echo "== Build backend image completed =="
 
             echo "== Run Prisma migrations =="
-            timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
+            timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run -T --rm backend npm run db:deploy
+            echo "== Run Prisma migrations completed =="
 
             echo "== Start backend =="
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build --force-recreate backend
+            echo "== Start backend completed =="
 
             echo "== Prune Docker images =="
             docker image prune -f
+            echo "== Prune Docker images completed =="
 
             echo "== Check backend health =="
             for i in $(seq 1 20); do
@@ -136,13 +147,19 @@ jobs:
             done
 
             curl -fsS http://127.0.0.1:3000/api/health
+            echo "== Direct backend health completed =="
+
+            echo "== Check Nginx API proxy health =="
             curl -fsS http://127.0.0.1/api/health || {
               sudo tail -100 /var/log/nginx/error.log || true
               sudo nginx -T | sed -n '1,220p' || true
               exit 1
             }
+            echo "== Check Nginx API proxy health completed =="
           EOF
 
       - name: Health check
         run: |
+          echo "== Check external backend health =="
           curl --fail --retry 10 --retry-delay 5 --retry-connrefused http://${{ secrets.EC2_HOST }}/api/health
+          echo "== Check external backend health completed =="

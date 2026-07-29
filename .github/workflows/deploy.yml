@@ -120,7 +120,7 @@ jobs:
             timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
 
             echo "== Start backend =="
-            docker compose --env-file .env.production -f docker-compose.prod.yml up -d backend
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build --force-recreate backend
 
             echo "== Prune Docker images =="
             docker image prune -f

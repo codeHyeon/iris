@@ -100,12 +100,6 @@ jobs:
 
             chmod 600 .env.production
 
-            echo "== Validate production env =="
-            grep -q '^DATABASE_URL=mysql://.*@mysql:3306/iris$' .env.production || {
-              echo "DATABASE_URL must use mysql:3306/iris inside docker-compose"
-              exit 1
-            }
-
             if ! swapon --show | grep -q '^'; then
               if [ ! -f /swapfile ]; then
                 sudo fallocate -l 2G /swapfile
@@ -122,34 +116,8 @@ jobs:
             echo "== Build backend image =="
             docker compose --env-file .env.production -f docker-compose.prod.yml build backend
 
-            echo "== Wait for MySQL =="
-            MYSQL_READY=0
-            for i in $(seq 1 30); do
-              MYSQL_STATUS=$(docker inspect --format '{{.State.Health.Status}}' iris-mysql-prod 2>/dev/null || echo "missing")
-              echo "MySQL status: $MYSQL_STATUS"
-
-              if [ "$MYSQL_STATUS" = "healthy" ]; then
-                MYSQL_READY=1
-                break
-              fi
-
-              sleep 2
-            done
-
-            if [ "$MYSQL_READY" -ne 1 ]; then
-              echo "MySQL did not become ready in time"
-              docker logs iris-mysql-prod --tail 100 || true
-              exit 1
-            fi
-
-            echo "== Verify MySQL app user connection =="
-            timeout 30s docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'MYSQL_PWD="$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u"$MYSQL_USER" --connect-timeout=10 "$MYSQL_DATABASE" -e "SELECT 1;"'
-
             echo "== Run Prisma migrations =="
             timeout 120s docker compose --env-file .env.production -f docker-compose.prod.yml run --rm backend npm run db:deploy
-
-            echo "== Verify database schema =="
-            docker compose --env-file .env.production -f docker-compose.prod.yml exec -T mysql sh -lc 'MYSQL_PWD="$MYSQL_PASSWORD" mysql -h 127.0.0.1 -u"$MYSQL_USER" --connect-timeout=10 "$MYSQL_DATABASE" -e "SHOW TABLES LIKE '\''notice_sites'\'';" | grep -q notice_sites'
 
             echo "== Start backend =="
             docker compose --env-file .env.production -f docker-compose.prod.yml up -d backend

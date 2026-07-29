@@ -3,6 +3,8 @@ import { logger } from '../../shared/logger/logger.js'
 import { crawlNotices } from '../crawling/index.js'
 import { toNoticePreview } from '../crawling/notice-normalizer.js'
 import { discordService, getDefaultIrisRoleName } from '../discord/discord.service.js'
+import { keywordRepository } from '../keyword/keyword.repository.js'
+import { subscriptionRepository } from '../subscription/subscription.repository.js'
 import { noticeConfigRepository } from './notice-config.repository.js'
 import type {
   SaveNoticeConfigBody,
@@ -286,7 +288,7 @@ export class NoticeConfigService {
 
     await Promise.all(roleIds.map((roleId) => discordService.deleteRole(guildId, roleId)))
 
-    await noticeConfigRepository.deleteByGuildId(guildId)
+    await noticeConfigRepository.deleteNoticeConfigByGuildId(guildId)
 
     return {
       message: 'IRIS 설정이 삭제되었습니다. 필요한 경우 Discord 서버에서 Bot을 제거할 수 있습니다.',
@@ -294,13 +296,14 @@ export class NoticeConfigService {
   }
 
   async cleanupGuildNoticeConfig(guildId: string) {
-    const noticeSite = await noticeConfigRepository.findByGuildId(guildId)
+    await noticeConfigRepository.deleteGuildDataByGuildId(guildId)
+  }
 
-    if (!noticeSite) {
-      return
-    }
-
-    await noticeConfigRepository.deleteByGuildId(guildId)
+  async cleanupGuildMemberNoticeData(guildId: string, userId: string) {
+    await Promise.all([
+      subscriptionRepository.deleteUserSubscriptionsByGuildId(guildId, userId),
+      keywordRepository.deleteUserKeywords(guildId, userId),
+    ])
   }
 }
 

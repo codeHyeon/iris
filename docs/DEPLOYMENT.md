@@ -261,9 +261,17 @@ EC2 Elastic IP가 확정된 뒤 `frontend/vercel.json`에 rewrite를 추가한�
 
 슬래시 명령어 이름, 설명, 옵션이 바뀌면 운영 등록을 다시 실행한다.
 
+로컬에서 배포 전에 등록할 때는 TypeScript 개발 스크립트를 사용한다.
+
 ```bash
 cd backend
-npm run discord:commands:register:global
+npm run discord:commands:register:global:dev
+```
+
+운영 Backend container에서 등록할 때는 빌드된 `dist` 스크립트를 사용한다.
+
+```bash
+docker compose --env-file .env.production -f docker-compose.prod.yml exec backend npm run discord:commands:register:global
 ```
 
 전역 명령어는 Discord 반영에 시간이 걸릴 수 있으므로 배포 직전 또는 배포 전에 미리 실행한다.
@@ -315,6 +323,7 @@ Scheduler 1회 실행:
 docker compose --env-file .env.production -f docker-compose.prod.yml exec backend npm run scheduler:notice:run-once
 ```
 
+운영 container의 `scheduler:notice:run-once`는 빌드된 `dist` 파일을 실행한다.
 첫 수집이면 공지를 저장만 하고 Discord 알림은 보내지 않는다. 이후 실행에서는 새로 감지된 공지만 알림 대상이 된다.
 
 ---

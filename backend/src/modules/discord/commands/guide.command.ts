@@ -39,6 +39,12 @@ export async function executeGuideCommand(interaction: ChatInputCommandInteracti
               '공지 사이트 설정을 삭제하면 카테고리, 구독, 수집 공지 데이터가 삭제됩니다.\n' +
               '키워드는 유지되며, 서버에서 나가거나 Bot을 제거하면 함께 정리됩니다.',
           },
+          {
+            name: 'Bot 제거',
+            value:
+              'Discord 역할까지 정리하려면 Bot을 제거하기 전에 관리자 페이지에서 설정 삭제를 먼저 실행해주세요.\n' +
+              'Bot을 먼저 제거하면 DB 데이터는 정리되지만 Discord 역할은 서버에 남을 수 있습니다.',
+          },
         ),
     ],
     ephemeral: true,

@@ -60,7 +60,7 @@ Frontend는 `http://localhost:5173`에서 실행됩니다.
 
 프로젝트 기획 및 상세 문서는 아래 링크에서 확인할 수 있습니다.
 
-- GitHub Wiki : **[IRIS 기획서](https://github.com/codeHyeon/hub/wiki/IRIS-%EA%B8%B0%ED%9A%8D%EC%84%9C)**
+- GitHub Wiki : **[IRIS 기획서](https://github.com/codeHyeon/iris/wiki/IRIS-%EA%B8%B0%ED%9A%8D%EC%84%9C)**
 
 - Notion : **[IRIS 문서](https://app.notion.com/p/IRIS-beb020cdef3e82dba426015fa9eb15c2)**
 

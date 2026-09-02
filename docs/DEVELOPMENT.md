@@ -6,11 +6,11 @@
 
 # Project Overview
 
-IRIS는 Discord 기반 대학 공지 알림 서비스입니다.
+IRIS는 Discord 기반 경북대학교 계열 공지 알림 서비스입니다.
 
-사용자는 Discord에서 카테고리별 공지 알림과 키워드 기반 DM 알림을 받아 대학 공지 사이트를 반복해서 확인하는 일을 줄일 수 있습니다.
+사용자는 Discord에서 카테고리별 공지 알림과 키워드 기반 DM 알림을 받아 경북대학교 계열 공지 사이트를 반복해서 확인하는 일을 줄일 수 있습니다.
 
-MVP는 공지 사이트 등록부터 Discord 알림 전송까지 실제로 동작하는 흐름을 완성하는 것을 목표로 합니다.
+MVP는 지원 사이트 프리셋 선택 또는 직접 설정부터 Discord 알림 전송까지 실제로 동작하는 흐름을 완성하는 것을 목표로 합니다.
 
 ---
 
@@ -54,6 +54,14 @@ MVP는 공지 사이트 등록부터 Discord 알림 전송까지 실제로 동�
 ## Scheduler
 
 - node-cron
+
+## Notice Site Presets
+
+- 경북대학교 계열 공지 사이트 프리셋은 Backend 코드 상수로 관리한다.
+- 프리셋은 사이트 이름, 공지 목록 URL, list/title/link/date/category/categoryList selector를 포함한다.
+- Frontend에는 프리셋 선택에 필요한 `id`, `name`, `url`만 API로 제공한다.
+- selector 값은 사용자에게 직접 노출하지 않고, Backend에서 crawl input으로 resolve한다.
+- 새 프리셋을 추가할 때는 테스트 크롤링으로 최근 공지 1개 이상과 카테고리 1개 이상이 감지되는지 확인한다.
 
 ## Language Policy
 

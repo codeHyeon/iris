@@ -1,6 +1,6 @@
 # IRIS DESIGN.md
 
-> Discord 기반 대학 공지 알림 서비스의 UI/UX 디자인 시스템 및 화면 설계 문서
+> Discord 기반 경북대학교 계열 공지 알림 서비스의 UI/UX 디자인 시스템 및 화면 설계 문서
 
 ---
 
@@ -40,9 +40,9 @@
 
 # 1. Product Identity
 
-IRIS는 대학 공지를 자동으로 확인하고 Discord에서 필요한 공지만 빠르게 받아볼 수 있도록 돕는 서비스입니다.
+IRIS는 경북대학교 계열 공지를 자동으로 확인하고 Discord에서 필요한 공지만 빠르게 받아볼 수 있도록 돕는 서비스입니다.
 
-관리자는 공지 사이트와 CSS Selector를 등록하고, 공통 알림 채널과 카테고리별 구독 역할을 설정합니다.
+관리자는 지원 사이트 프리셋을 선택하거나 직접 URL/Selector를 설정하고, 공통 알림 채널과 카테고리별 구독 역할을 설정합니다.
 
 사용자는 Discord 슬래시 명령어로 카테고리 구독과 키워드 알림을 직접 관리합니다.
 
@@ -86,11 +86,11 @@ DESIGN.md의 텍스트 규칙을 우선 기준으로 삼되, 실제 화면 구�
 
 관리자 흐름은 복잡한 설정을 한 번에 보여주지 않고 다음 순서로 진행한다.
 
-Site 등록
+지원 사이트 선택
 
 ↓
 
-Selector 설정
+테스트 크롤링
 
 ↓
 
@@ -394,11 +394,11 @@ Discord University Notice Service
 
 Headline
 
-필요한 대학 공지를 Discord에서 더 편하게
+필요한 경북대학교 공지를 Discord에서 더 편하게
 
 Description
 
-Iris는 대학 공지를 자동으로 확인하고, 카테고리 알림과 키워드 DM으로 필요한 공지만 빠르게 받아볼 수 있도록 돕는다.
+Iris는 경북대학교 계열 공지를 자동으로 확인하고, 카테고리 알림과 키워드 DM으로 필요한 공지만 빠르게 받아볼 수 있도록 돕는다.
 
 Button
 
@@ -464,7 +464,7 @@ Discord 봇 초대하기 버튼
 
 목적
 
-공지 사이트 정보와 크롤링 Selector를 등록한다.
+지원되는 경북대학교 계열 공지 사이트를 선택하거나 직접 URL/Selector를 설정한다.
 
 좌측
 
@@ -478,17 +478,26 @@ Sidebar
 
 Main
 
-사이트 이름
+Heading 오른쪽에는 설정 방식 전환 segmented control을 배치한다.
 
-공지 사이트 URL
+- 지원 사이트
+- 직접 설정
 
-입력란은 실제 값이 채워진 상태가 아니라 placeholder 예시로 표시한다.
+기본 선택은 지원 사이트 모드다.
 
-- 예: 경북대학교 컴퓨터학부
-- 예: https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor
+지원 사이트 모드
 
-Selector 설정
+- 경북대학교 계열 공지 사이트 프리셋을 작은 선택 버튼 그리드로 표시한다.
+- 데스크톱에서는 한 줄에 4개를 배치한다.
+- 데스크톱에서는 최대 4줄까지 자연스럽게 노출하고, 그 이상은 프리셋 목록 내부 스크롤을 사용한다.
+- 선택된 프리셋은 IRIS Primary 테두리, 연한 보라 배경, `선택됨` badge로 표시한다.
+- 프리셋 항목에는 사이트 이름과 대표 도메인만 표시한다.
+- 카테고리 chip은 표시하지 않는다.
 
+직접 설정 모드
+
+- 사이트 이름
+- 공지 사이트 URL
 - 목록 Selector (list)
 - 제목 Selector (title)
 - 링크 Selector (link)
@@ -496,10 +505,11 @@ Selector 설정
 - 카테고리 Selector (category)
 - 전체 카테고리 Selector (category list)
 
-Selector 입력란은 실제 값이 채워진 상태가 아니라 placeholder 예시로 표시한다.
+직접 설정 입력란은 실제 값이 채워진 상태가 아니라 placeholder 예시로 표시한다.
 
+- 예: 경북대학교 컴퓨터학부
+- 예: https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor
 - 예: .basic_tbl_head tbody > tr
-- 예: .bo_tit a
 - 예: .bo_tit a
 - 예: .td_datetime
 - 예: .bo_cate_link
@@ -515,7 +525,7 @@ Preview
 
 Helper
 
-Selector 설정 제목 오른쪽에 배치한다.
+직접 설정 모드의 Selector 설정 제목 오른쪽에 배치한다.
 
 문구: 도움이 필요하신가요?
 
@@ -539,10 +549,10 @@ Guide
 
 Guide는 단순 문장 목록이 아니라 숫자 배지가 있는 Step Item 형태로 표시한다.
 
-1. 공지 사이트 입력
-   - 공지 목록이 있는 페이지의 이름과 URL을 입력한다.
-2. Selector 설정
-   - 목록, 제목, 링크, 날짜, 공지 항목 카테고리, 전체 카테고리 목록을 찾을 CSS Selector를 입력한다.
+1. 지원 사이트 선택
+   - 검증된 경북대학교 계열 공지 사이트 프리셋을 선택한다.
+2. 직접 설정
+   - 지원 목록에 없는 사이트는 URL과 CSS Selector를 직접 입력할 수 있다.
 3. 테스트 크롤링 확인
    - 저장 전에 최근 공지와 감지된 카테고리가 제대로 보이는지 확인한다.
 
@@ -563,6 +573,8 @@ Main 영역만 세로 스크롤되며 Sidebar와 Guide는 화면에 유지된다
 Table
 
 알림 채널은 감지된 카테고리 목록과 분리된 별도 카드로 표시한다.
+알림 채널 카드 제목 오른쪽에는 채널 목록 새로고침 버튼을 배치한다.
+새로고침 버튼은 작은 secondary button 스타일을 사용하고, 로딩 중에는 비활성화한다.
 
 감지된 카테고리 목록
 
@@ -643,6 +655,7 @@ Guide는 숫자 배지가 있는 Step Item 형태로 표시한다.
    - 테스트 크롤링에서 감지된 카테고리 목록을 확인한다.
 2. 알림 채널
    - 모든 공지 알림을 보낼 Discord 채널을 선택한다.
+   - Discord에서 채널을 새로 만든 경우 채널 목록 새로고침으로 다시 불러온다.
 3. 구독 역할
    - 사용자가 카테고리를 구독하면 설정한 이름의 역할이 부여된다.
 
@@ -1036,7 +1049,7 @@ IRIS Landing 및 관리자 설정 프로토타입을 HTML/CSS로 구현한다.
 
 조건
 
-- Discord 기반 대학 공지 알림 서비스
+- Discord 기반 경북대학교 계열 공지 알림 서비스
 - 밝은 관리자 UI와 Discord Dark Preview를 분리
 - Purple Primary Color 사용
 - Card UI 유지
@@ -1045,7 +1058,7 @@ IRIS Landing 및 관리자 설정 프로토타입을 HTML/CSS로 구현한다.
 - 설정 완료 화면에서는 완료 이후 안내를 Main 콘텐츠로 통합
 - Pretendard / Inter Font 사용
 - Radius와 Shadow 일관성 유지
-- Site 등록 → Selector 설정 → Category 설정 → 완료 흐름 구현
+- 지원 사이트 선택 → 테스트 크롤링 → Category 설정 → 완료 흐름 구현
 - /help, /subscribe, /keyword Discord Preview 구현
 - DESIGN.md를 절대 기준으로 구현
 
@@ -1103,7 +1116,8 @@ FlowSummary
 
 # 17. Final Direction
 
-IRIS는 관리자가 대학 공지 사이트를 빠르게 연결하고, 사용자가 Discord 안에서 필요한 공지만 선택적으로 받아볼 수 있는 서비스를 목표로 한다.
+IRIS는 관리자가 경북대학교 계열 공지 사이트를 빠르게 연결하고, 사용자가 Discord 안에서 필요한 공지만 선택적으로 받아볼 수 있는 서비스를 목표로 한다.
+MVP에서는 경북대학교 계열 공지 사이트 프리셋 선택을 기본 흐름으로 제공하고, 직접 URL/Selector 입력은 고급 설정으로 유지한다.
 
 전체 디자인은 밝은 관리자 경험, 명확한 단계 흐름, Discord Native 사용성을 중심으로 구성한다.
 

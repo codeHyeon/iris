@@ -6,11 +6,12 @@
 
 # 1. System Overview
 
-IRIS는 Discord 서버별로 하나의 대학 공지 사이트를 등록하고, 30분마다 공지를 확인해 Discord 채널 알림과 사용자 DM 알림을 제공한다.
+IRIS는 Discord 서버별로 하나의 경북대학교 계열 공지 사이트 설정을 등록하고, 30분마다 공지를 확인해 Discord 채널 알림과 사용자 DM 알림을 제공한다.
 
 ```text
 관리자 페이지
   -> Backend REST API
+  -> Preset Registry
   -> MySQL
 
 Discord 슬래시 명령어
@@ -30,6 +31,7 @@ Scheduler
 
 - Admin Web: React/Vite 기반 관리자 설정 UI
 - Backend API: Express 기반 REST API
+- Preset Registry: Backend 코드에 정의된 경북대학교 계열 공지 사이트 프리셋
 - Discord Bot: discord.js 기반 슬래시 명령어와 interaction 처리
 - Scheduler: node-cron 기반 30분 주기 작업 실행
 - Crawler: Axios/Cheerio 기반 공지 목록 추출
@@ -41,6 +43,7 @@ Scheduler
 # 2. Architecture Boundaries
 
 - MVP에서는 Discord 서버 1개당 공지 사이트 1개만 등록한다.
+- 공지 사이트 등록은 지원 사이트 프리셋 선택을 기본으로 하고, 직접 URL/Selector 입력은 고급 설정으로 제공한다.
 - Admin 페이지는 MVP에서 별도 로그인이나 토큰 검증을 하지 않는다.
 - `/setup`은 Discord interaction에서 관리자 권한만 확인하고 관리자 바로가기 버튼을 제공한다.
 - Discord 채널은 IRIS가 자동 생성하지 않고 기존 채널을 선택한다.
@@ -59,7 +62,8 @@ Scheduler
 
 ## Admin Web
 
-- 공지 사이트 URL과 selector 입력
+- 지원 사이트 프리셋 목록 조회 및 선택
+- 직접 설정 모드에서 공지 사이트 URL과 selector 입력
 - 테스트 크롤링 실행
 - 최근 공지 미리보기와 전체 카테고리 목록 표시
 - 공통 알림 채널, 카테고리별 역할 이름, 활성화 여부 설정
@@ -68,6 +72,8 @@ Scheduler
 ## Backend API
 
 - 관리자 페이지 요청 검증
+- 프리셋 목록 반환
+- 프리셋 id를 실제 크롤링 입력값으로 변환
 - 테스트 크롤링 실행 및 결과 반환
 - 공지 사이트와 카테고리 설정 저장
 - Discord 채널 목록 조회
@@ -87,7 +93,7 @@ Scheduler
 
 - 공지 사이트 설정 저장 또는 교체 직후 해당 사이트 즉시 초기 수집
 - 30분마다 등록된 공지 사이트 순회
-- selector 기반 공지 목록과 전체 카테고리 목록 추출
+- 저장된 URL/selector 기반 공지 목록과 전체 카테고리 목록 추출
 - `title`, `link`, `date`, `category` 필수 검증
 - 링크 정규화와 `hashKey` 생성
 - 신규 공지 중복 검사
@@ -114,6 +120,7 @@ Scheduler
 # 4. Data Ownership
 
 - `notice_sites.guild_id`: Discord 서버별 공지 사이트 설정 기준
+- Preset Registry: 경북대학교 계열 공지 사이트의 검증된 URL/selector 원본. DB 테이블이 아니라 Backend 코드 상수로 관리한다.
 - `categories`: 감지 카테고리와 Discord 알림 채널/역할 연결 정보
 - `notices`: 크롤링된 공지, 중복 검사, 요청 기반 요약 저장
 - `subscriptions`: 사용자별 카테고리 구독 상태
@@ -142,9 +149,11 @@ Scheduler
 ## Test Crawl Flow
 
 ```text
-관리자가 공지 사이트와 selector 입력
+관리자가 지원 사이트 프리셋 선택 또는 직접 설정 입력
   -> POST /api/admin/{guildId}/notice-config/test
   -> Backend가 필수 요청 값 검증
+  -> 프리셋 모드이면 presetId로 URL/selector resolve
+  -> 직접 설정 모드이면 요청 body의 URL/selector 사용
   -> Crawler가 공지 페이지 요청
   -> selector로 공지 목록과 카테고리 목록 추출
   -> 제목, 링크, 날짜, 카테고리, 카테고리 목록 검증
@@ -159,6 +168,7 @@ Scheduler
 ```text
 관리자가 사이트와 카테고리 설정 저장
   -> POST /api/admin/{guildId}/notice-config
+  -> 프리셋 모드이면 presetId로 URL/selector resolve
   -> 테스트 크롤링 가능한 설정인지 검증
   -> 활성 카테고리의 Discord 역할 생성
   -> 같은 이름의 역할이 이미 있으면 실패
@@ -172,8 +182,8 @@ Scheduler
 ## Replace Config Flow
 
 ```text
-관리자가 사이트 URL 또는 selector 변경
-  -> 새 selector로 테스트 크롤링
+관리자가 프리셋 또는 직접 설정의 사이트 URL/selector 변경
+  -> 새 설정으로 테스트 크롤링
   -> PUT /api/admin/{guildId}/notice-config
   -> 활성 카테고리의 새 Discord 역할 생성
   -> 같은 이름의 역할이 이미 있으면 실패

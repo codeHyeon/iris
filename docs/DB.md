@@ -10,6 +10,7 @@
 - MVP에서는 Discord 서버 1개당 공지 사이트 1개만 등록한다.
 - 공지 사이트는 `notice_sites.guild_id`로 Discord 서버와 연결한다.
 - `notice_sites.guild_id`는 unique이며, 서버당 하나의 공지 사이트만 허용한다.
+- 경북대학교 계열 공지 사이트 프리셋은 Backend 코드 상수로 관리하고, DB에는 guild별로 적용된 resolved 사이트 설정을 저장한다.
 - 공지 중복 검사는 `noticeSiteId + normalizedLink` 기준으로 수행한다.
 - 카테고리 구독은 `subscriptions.userId + categoryId` 기준으로 저장한다.
 - 키워드는 `guildId + userId + keyword` 기준으로 서버별 분리 저장한다.
@@ -22,20 +23,21 @@
 
 ## notice_sites
 
-서버별 공지 사이트와 크롤링 selector를 저장한다.
+서버별로 적용된 공지 사이트 설정과 크롤링 selector를 저장한다.
+지원 사이트 프리셋을 선택한 경우에도 프리셋 id 자체가 아니라 Backend에서 resolve한 사이트 이름, URL, selector 값을 기존 컬럼에 저장한다.
 
 | Column | Type | Constraint | Note |
 |---|---|---|---|
 | id | int | pk, increment | 내부 site id |
 | guild_id | varchar | not null, unique | Discord guild id |
-| name | varchar | not null | 사이트 이름 |
-| url | varchar | not null | 공지 목록 URL |
-| listSelector | varchar | not null | 공지 목록 selector |
-| titleSelector | varchar | not null | 제목 selector |
-| linkSelector | varchar | not null | 링크 selector |
-| dateSelector | varchar | not null | 날짜 selector |
-| categorySelector | varchar | not null | 공지 항목 내부 카테고리 selector |
-| categoryListSelector | varchar | not null | 전체 카테고리 목록 selector |
+| name | varchar | not null | 프리셋에서 resolve된 사이트 이름 또는 직접 입력한 사이트 이름 |
+| url | varchar | not null | 프리셋에서 resolve된 공지 목록 URL 또는 직접 입력한 URL |
+| listSelector | varchar | not null | 프리셋에서 resolve된 공지 목록 selector 또는 직접 입력한 selector |
+| titleSelector | varchar | not null | 프리셋에서 resolve된 제목 selector 또는 직접 입력한 selector |
+| linkSelector | varchar | not null | 프리셋에서 resolve된 링크 selector 또는 직접 입력한 selector |
+| dateSelector | varchar | not null | 프리셋에서 resolve된 날짜 selector 또는 직접 입력한 selector |
+| categorySelector | varchar | not null | 프리셋에서 resolve된 공지 항목 내부 카테고리 selector 또는 직접 입력한 selector |
+| categoryListSelector | varchar | not null | 프리셋에서 resolve된 전체 카테고리 목록 selector 또는 직접 입력한 selector |
 | created_at | datetime | not null | 생성일 |
 | updated_at | datetime | not null | 수정일 |
 
@@ -43,6 +45,7 @@
 
 - `guild_id` unique 제약으로 MVP의 서버당 공지 사이트 1개 정책을 보장한다.
 - selector 테스트 크롤링은 `title`, `link`, `date`, 공지별 `category`, 전체 카테고리 목록을 모두 가져와야 성공한다.
+- 현재 MVP에서는 프리셋 추적용 `presetId` 컬럼을 추가하지 않는다. 저장된 URL/selector가 scheduler의 실행 기준이다.
 
 ---
 

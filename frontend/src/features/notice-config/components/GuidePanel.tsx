@@ -26,13 +26,13 @@ export function GuidePanel({ step }: { step: AdminStep }) {
         <div className="guide-step-list">
           <GuideStep
             number="01"
-            title="공지 사이트 입력"
-            description="공지 목록이 있는 페이지의 이름과 URL을 입력합니다."
+            title="지원 사이트 선택"
+            description="검증된 경북대학교 계열 공지 사이트를 선택합니다."
           />
           <GuideStep
             number="02"
-            title="Selector 설정"
-            description="목록, 제목, 링크, 날짜, 카테고리를 찾을 CSS Selector를 입력합니다."
+            title="직접 설정"
+            description="지원 목록에 없는 사이트는 URL과 CSS Selector를 직접 입력할 수 있습니다."
           />
           <GuideStep
             number="03"
@@ -41,7 +41,7 @@ export function GuidePanel({ step }: { step: AdminStep }) {
           />
         </div>
         <p className="guide-tip">
-          💡 Selector 설정은 직접 입력하기 어려울 수 있으므로 설정 방법과 개발자에게 요청하는 방법을 이용해주세요.
+          지원 사이트를 먼저 사용하고, 필요한 경우 직접 설정의 설정 방법과 개발자 요청을 이용해주세요.
         </p>
       </aside>
     )
@@ -59,7 +59,7 @@ export function GuidePanel({ step }: { step: AdminStep }) {
         <GuideStep
           number="02"
           title="알림 채널"
-          description="모든 공지 알림을 보낼 Discord 채널을 선택합니다."
+          description="모든 공지 알림을 보낼 Discord 채널을 선택하고, 필요하면 채널 목록을 새로고침합니다."
         />
         <GuideStep
           number="03"

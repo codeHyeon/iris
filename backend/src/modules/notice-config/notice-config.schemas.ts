@@ -4,7 +4,7 @@ export const guildParamsSchema = z.object({
   guildId: z.string().trim().min(1),
 })
 
-export const testCrawlBodySchema = z.object({
+export const noticeSiteConfigSchema = z.object({
   name: z.string().trim().min(1),
   url: z.string().trim().url(),
   listSelector: z.string().trim().min(1),
@@ -15,8 +15,21 @@ export const testCrawlBodySchema = z.object({
   categoryListSelector: z.string().trim().min(1),
 })
 
+export const noticeSiteInputSchema = z.discriminatedUnion('mode', [
+  z.object({
+    mode: z.literal('preset'),
+    presetId: z.string().trim().min(1),
+  }),
+  z.object({
+    mode: z.literal('custom'),
+    site: noticeSiteConfigSchema,
+  }),
+])
+
+export const testCrawlBodySchema = noticeSiteInputSchema
+
 export const saveNoticeConfigBodySchema = z.object({
-  site: testCrawlBodySchema,
+  site: noticeSiteInputSchema,
   categories: z.array(
     z.object({
       name: z.string().trim().min(1),
@@ -39,6 +52,8 @@ export const updateNoticeCategoriesBodySchema = z.object({
 })
 
 export type GuildParams = z.infer<typeof guildParamsSchema>
+export type NoticeSiteConfig = z.infer<typeof noticeSiteConfigSchema>
+export type NoticeSiteInput = z.infer<typeof noticeSiteInputSchema>
 export type TestCrawlBody = z.infer<typeof testCrawlBodySchema>
 export type SaveNoticeConfigBody = z.infer<typeof saveNoticeConfigBodySchema>
 export type UpdateNoticeCategoriesBody = z.infer<typeof updateNoticeCategoriesBodySchema>

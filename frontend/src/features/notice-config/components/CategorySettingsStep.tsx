@@ -17,6 +17,7 @@ interface CategorySettingsStepProps {
     value: string | boolean,
   ) => void
   onNotificationChannelChange: (channelId: string) => void
+  onRefreshChannels: () => void
   onPrevious: () => void
   onSave: () => void
   onNext: () => void
@@ -33,6 +34,7 @@ export function CategorySettingsStep({
   saveError,
   onNotificationChannelChange,
   onCategoryChange,
+  onRefreshChannels,
   onPrevious,
   onSave,
   onNext,
@@ -45,7 +47,17 @@ export function CategorySettingsStep({
       </header>
 
       <section className="notification-channel-card">
-        <h2>알림 채널</h2>
+        <div className="section-title-row">
+          <h2>알림 채널</h2>
+          <button
+            className="secondary-small"
+            type="button"
+            disabled={isLoadingChannels}
+            onClick={onRefreshChannels}
+          >
+            {isLoadingChannels ? '새로고침 중...' : '채널 새로고침'}
+          </button>
+        </div>
         {isLoadingChannels && <p className="table-message">Discord 채널 목록을 불러오는 중입니다.</p>}
         {channelLoadError && <p className="table-message error">{channelLoadError}</p>}
         <div className="notification-channel-field">

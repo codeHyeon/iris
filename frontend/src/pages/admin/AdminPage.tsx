@@ -11,6 +11,7 @@ import { submitSelectorHelpRequestMock } from '../../features/notice-config/api/
 import {
   deleteNoticeConfig,
   getNoticeConfig,
+  getNoticeSitePresets,
   replaceNoticeConfig,
   saveNoticeConfig,
   testNoticeConfigCrawl,
@@ -23,6 +24,9 @@ import type {
 import type {
   DetectedCategory,
   NoticeConfigForm,
+  NoticeSiteInput,
+  NoticeSiteMode,
+  NoticeSitePreset,
   NoticePreview,
   SelectorHelpRequest,
 } from '../../features/notice-config/types/noticeConfigTypes'
@@ -49,7 +53,12 @@ interface AdminPageProps {
 
 function AdminPage({ guildId }: AdminPageProps) {
   const [step, setStep] = useState<AdminStep>('site')
+  const [siteMode, setSiteMode] = useState<NoticeSiteMode>('preset')
   const [form, setForm] = useState<NoticeConfigForm>(initialForm)
+  const [presets, setPresets] = useState<NoticeSitePreset[]>([])
+  const [selectedPresetId, setSelectedPresetId] = useState('')
+  const [isLoadingPresets, setIsLoadingPresets] = useState(true)
+  const [presetLoadError, setPresetLoadError] = useState<string | null>(null)
   const [notices, setNotices] = useState<NoticePreview[]>([])
   const [categories, setCategories] = useState<DetectedCategory[]>([])
   const [discordChannels, setDiscordChannels] = useState<DiscordChannel[]>([])
@@ -72,6 +81,38 @@ function AdminPage({ guildId }: AdminPageProps) {
       ...current,
       [field]: value,
     }))
+    invalidateCrawlResult()
+  }
+
+  const updateSiteMode = (mode: NoticeSiteMode) => {
+    setSiteMode(mode)
+    setCrawlError(null)
+    invalidateCrawlResult()
+  }
+
+  const updateSelectedPresetId = (presetId: string) => {
+    setSelectedPresetId(presetId)
+    setCrawlError(null)
+    invalidateCrawlResult()
+  }
+
+  const getNoticeSiteInput = (): NoticeSiteInput => {
+    if (siteMode === 'preset') {
+      return {
+        mode: 'preset',
+        presetId: selectedPresetId,
+      }
+    }
+
+    return getCustomSiteInput(form)
+  }
+
+  const invalidateCrawlResult = () => {
+    setNotices([])
+    setCategories([])
+    setHasRetestedSite(false)
+    setSaveStatus('dirty')
+    setSaveError(null)
   }
 
   const resetNoticeConfigFlow = () => {
@@ -89,6 +130,40 @@ function AdminPage({ guildId }: AdminPageProps) {
   useEffect(() => {
     let isCurrent = true
 
+    async function loadNoticeSitePresets() {
+      setIsLoadingPresets(true)
+      setPresetLoadError(null)
+
+      try {
+        const noticeSitePresets = await getNoticeSitePresets()
+
+        if (!isCurrent) {
+          return
+        }
+
+        setPresets(noticeSitePresets)
+        setSelectedPresetId((current) => current || noticeSitePresets[0]?.id || '')
+      } catch (error) {
+        if (isCurrent) {
+          setPresetLoadError(getErrorMessage(error, '지원 사이트 목록을 불러오지 못했습니다.'))
+        }
+      } finally {
+        if (isCurrent) {
+          setIsLoadingPresets(false)
+        }
+      }
+    }
+
+    void loadNoticeSitePresets()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
+  useEffect(() => {
+    let isCurrent = true
+
     async function loadNoticeConfig() {
       try {
         const noticeConfig = await getNoticeConfig(guildId)
@@ -99,6 +174,7 @@ function AdminPage({ guildId }: AdminPageProps) {
 
         setForm(noticeConfig.form)
         setCategories(noticeConfig.categories)
+        setSiteMode('custom')
         setHasExistingConfig(true)
         setHasSavedConfig(true)
         setHasRetestedSite(false)
@@ -119,6 +195,21 @@ function AdminPage({ guildId }: AdminPageProps) {
       isCurrent = false
     }
   }, [guildId])
+
+  const refreshDiscordChannels = async () => {
+    setIsLoadingChannels(true)
+    setChannelLoadError(null)
+
+    try {
+      const channels = await getDiscordChannels(guildId)
+
+      setDiscordChannels(channels)
+    } catch (error) {
+      setChannelLoadError(getErrorMessage(error, 'Discord 채널 목록을 불러오지 못했습니다.'))
+    } finally {
+      setIsLoadingChannels(false)
+    }
+  }
 
   useEffect(() => {
     let isCurrent = true
@@ -158,7 +249,7 @@ function AdminPage({ guildId }: AdminPageProps) {
     setCrawlError(null)
 
     try {
-      const result = await testNoticeConfigCrawl(guildId, form)
+      const result = await testNoticeConfigCrawl(guildId, getNoticeSiteInput())
 
       setNotices(result.notices)
       setCategories(fillMissingChannelIds(result.categories, discordChannels))
@@ -210,7 +301,7 @@ function AdminPage({ guildId }: AdminPageProps) {
     try {
       if (hasExistingConfig) {
         if (hasRetestedSite) {
-          await replaceNoticeConfig(guildId, { form, categories: normalizedCategories })
+          await replaceNoticeConfig(guildId, { site: getNoticeSiteInput(), categories: normalizedCategories })
           await syncSavedNoticeConfig()
         } else {
           const result = await updateNoticeCategories(guildId, normalizedCategories)
@@ -218,7 +309,7 @@ function AdminPage({ guildId }: AdminPageProps) {
           setCategories(result.categories)
         }
       } else {
-        await saveNoticeConfig(guildId, { form, categories: normalizedCategories })
+        await saveNoticeConfig(guildId, { site: getNoticeSiteInput(), categories: normalizedCategories })
         setHasExistingConfig(true)
         await syncSavedNoticeConfig()
       }
@@ -247,6 +338,10 @@ function AdminPage({ guildId }: AdminPageProps) {
 
   const handleSelectorHelpRequest = async (request: SelectorHelpRequest) => {
     await submitSelectorHelpRequestMock(request)
+  }
+
+  const handleRefreshChannels = async () => {
+    await refreshDiscordChannels()
   }
 
   const openDeleteModal = () => {
@@ -302,11 +397,18 @@ function AdminPage({ guildId }: AdminPageProps) {
       return (
         <SiteRegistrationStep
           form={form}
+          siteMode={siteMode}
+          presets={presets}
+          selectedPresetId={selectedPresetId}
+          isLoadingPresets={isLoadingPresets}
+          presetLoadError={presetLoadError}
           isCrawling={isCrawling}
           crawlError={crawlError}
           notices={notices}
           categories={categories}
           selectorGuideUrl={selectorGuideUrl}
+          onSiteModeChange={updateSiteMode}
+          onPresetSelect={updateSelectedPresetId}
           onFormChange={updateForm}
           onTestCrawl={handleTestCrawl}
           onNext={() => setStep('categories')}
@@ -328,6 +430,7 @@ function AdminPage({ guildId }: AdminPageProps) {
           saveError={saveError}
           onNotificationChannelChange={updateNotificationChannel}
           onCategoryChange={updateCategory}
+          onRefreshChannels={handleRefreshChannels}
           onPrevious={() => setStep('site')}
           onSave={handleSave}
           onNext={() => setStep('complete')}
@@ -395,6 +498,13 @@ function AdminPage({ guildId }: AdminPageProps) {
 }
 
 export default AdminPage
+
+function getCustomSiteInput(form: NoticeConfigForm): NoticeSiteInput {
+  return {
+    mode: 'custom',
+    site: form,
+  }
+}
 
 function fillMissingChannelIds(categories: DetectedCategory[], channels: DiscordChannel[]) {
   const fallbackChannelId = channels[0]?.id || ''

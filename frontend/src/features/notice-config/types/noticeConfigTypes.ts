@@ -9,6 +9,24 @@ export interface NoticeConfigForm {
   categoryListSelector: string
 }
 
+export type NoticeSiteMode = 'preset' | 'custom'
+
+export interface NoticeSitePreset {
+  id: string
+  name: string
+  url: string
+}
+
+export type NoticeSiteInput =
+  | {
+      mode: 'preset'
+      presetId: string
+    }
+  | {
+      mode: 'custom'
+      site: NoticeConfigForm
+    }
+
 export interface NoticePreview {
   title: string
   link: string
@@ -31,7 +49,7 @@ export interface TestCrawlResult {
 }
 
 export interface NoticeConfigDraft {
-  form: NoticeConfigForm
+  site: NoticeSiteInput
   categories: DetectedCategory[]
 }
 

@@ -56,34 +56,78 @@ Content-Type: application/json
 MVP에서는 `guildId`당 공지 사이트 1개만 저장합니다.
 기존 설정이 있으면 먼저 기존 설정을 불러옵니다.
 
-사이트 정보 입력
+지원 사이트 프리셋 선택 또는 직접 설정
 → 테스트 크롤링
 → 감지 카테고리 설정
 → 최종 저장
 
 사이트 등록 화면과 카테고리 설정 화면은 서로 다른 기능이 아니라 하나의 설정 과정을 두 단계로 나눈 것입니다.
 
-## 3.1 테스트 크롤링
+## 3.1 공지 사이트 프리셋 목록 조회
 
-관리자가 입력한 공지 사이트 URL과 Selector가 정상적으로 동작하는지 확인합니다.
+Backend 코드에 등록된 경북대학교 계열 공지 사이트 프리셋 목록을 조회합니다.
+프리셋은 검증된 사이트 이름, URL, Selector를 포함하지만 Frontend에는 선택에 필요한 정보만 반환합니다.
+
+```http
+GET /api/notice-presets
+```
+
+**Response Body**
+
+```json
+{
+  "data": [
+    {
+      "id": "knu-computer-science",
+      "name": "경북대학교 컴퓨터학부",
+      "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor"
+    }
+  ]
+}
+```
+
+**Rules**
+
+- 프리셋 원본은 Backend 코드에서 관리합니다.
+- Frontend는 `id`, `name`, `url`을 기준으로 프리셋 선택 UI를 구성합니다.
+- Selector 값은 사용자에게 직접 노출하지 않습니다.
+- 프리셋 추가 또는 수정은 코드 변경과 배포를 통해 반영합니다.
+
+---
+
+## 3.2 테스트 크롤링
+
+선택한 프리셋 또는 관리자가 직접 입력한 공지 사이트 URL과 Selector가 정상적으로 동작하는지 확인합니다.
 최근 공지 미리보기와 감지된 카테고리 목록을 반환하며, 이 단계에서는 DB에 설정을 저장하지 않습니다.
 
 ```http
 POST /api/admin/{guildId}/notice-config/test
 ```
 
-**Request Body**
+**Preset Request Body**
 
 ```json
 {
-  "name": "경북대학교 컴퓨터학부",
-  "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor",
-  "listSelector": ".basic_tbl_head tbody > tr",
-  "titleSelector": ".bo_tit a",
-  "linkSelector": ".bo_tit a",
-  "dateSelector": ".td_datetime",
-  "categorySelector": ".bo_cate_link",
-  "categoryListSelector": "#bo_cate_ul a"
+  "mode": "preset",
+  "presetId": "knu-computer-science"
+}
+```
+
+**Custom Request Body**
+
+```json
+{
+  "mode": "custom",
+  "site": {
+    "name": "경북대학교 컴퓨터학부",
+    "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor",
+    "listSelector": ".basic_tbl_head tbody > tr",
+    "titleSelector": ".bo_tit a",
+    "linkSelector": ".bo_tit a",
+    "dateSelector": ".td_datetime",
+    "categorySelector": ".bo_cate_link",
+    "categoryListSelector": "#bo_cate_ul a"
+  }
 }
 ```
 
@@ -111,7 +155,10 @@ POST /api/admin/{guildId}/notice-config/test
 
 **Success Rules**
 
-- 'listSelector'를 통해 최신 공지 1개 이상 감지
+- `mode`는 `preset` 또는 `custom`입니다.
+- `preset` 모드는 유효한 `presetId`가 필요합니다.
+- `custom` 모드는 `site`의 모든 URL/Selector 필드가 필요합니다.
+- `listSelector`를 통해 최신 공지 1개 이상 감지
 - 감지된 미리보기 공지 항목에서 제목, 링크, 날짜, 카테고리를 추출할 수 있어야 함
 - 날짜를 추출하고 DateTime으로 변환할 수 있어야 함
 - `categoryListSelector`로 전체 카테고리 1개 이상 감지
@@ -120,15 +167,16 @@ POST /api/admin/{guildId}/notice-config/test
 
 - 공지를 가져오지 못함
 - Request Body 필수 값 누락
+- 유효하지 않은 `presetId`
 - 제목, 링크, 날짜, 카테고리 중 하나라도 추출 실패
 - 날짜를 DateTime으로 변환하지 못함
 - 전체 카테고리를 1개도 감지하지 못함
 
 ---
 
-## 3.1.1 Selector 설정 도움 요청
+## 3.2.1 지원 사이트 추가 요청
 
-Selector 설정이 어려운 관리자가 개발자에게 설정 도움을 요청할 때 사용합니다.
+지원 사이트 목록에 없는 공지 사이트를 관리자가 추가 요청할 때 사용합니다.
 
 MVP 현재는 Backend API를 제공하지 않고, Frontend에서 실제 전송 없이 접수 안내 문구만 표시합니다.
 실제 서비스 연동 후에는 요청 내용이 운영자 메일 또는 저장소로 전달되고, 운영자는 사용자가 입력한 이메일 주소로 답변합니다.
@@ -136,7 +184,7 @@ MVP 현재는 Backend API를 제공하지 않고, Frontend에서 실제 전송 �
 Planned endpoint:
 
 ```http
-POST /api/admin/{guildId}/selector-help-requests
+POST /api/admin/{guildId}/notice-site-requests
 ```
 
 **Request Body**
@@ -158,31 +206,26 @@ POST /api/admin/{guildId}/selector-help-requests
 
 ---
 
-## 3.2 공지 사이트 설정 저장
+## 3.3 공지 사이트 설정 저장
 
 사이트 정보와 카테고리 설정을 한 번에 저장합니다.
 
 기존 설정이 없을 때 최초 생성 시 사용
 사이트 등록과 카테고리 설정은 마지막 저장 시 한 번에 반영
 Frontend 관리자 흐름에서는 테스트 크롤링 성공 후 최초 저장할 때 이 API를 호출합니다.
+프리셋 선택 모드에서는 Backend가 `presetId`를 실제 사이트 이름, URL, Selector로 변환한 뒤 기존 `notice_sites` 컬럼에 저장합니다.
 
 ```http
 POST /api/admin/{guildId}/notice-config
 ```
 
-**Request Body**
+**Preset Request Body**
 
 ```json
 {
-   "site": {
-    "name": "...",
-    "url": "...",
-    "listSelector": "...",
-    "titleSelector": "...",
-    "linkSelector": "...",
-    "dateSelector": "...",
-    "categorySelector": "...",
-    "categoryListSelector": "..."
+  "site": {
+    "mode": "preset",
+    "presetId": "knu-computer-science"
   },
   "categories": [
     {
@@ -201,6 +244,34 @@ POST /api/admin/{guildId}/notice-config
 }
 ```
 
+**Custom Request Body**
+
+```json
+{
+  "site": {
+    "mode": "custom",
+    "site": {
+      "name": "...",
+      "url": "...",
+      "listSelector": "...",
+      "titleSelector": "...",
+      "linkSelector": "...",
+      "dateSelector": "...",
+      "categorySelector": "...",
+      "categoryListSelector": "..."
+    }
+  },
+  "categories": [
+    {
+      "name": "학사",
+      "channelId": "111111111111111111",
+      "roleName": "학사공지",
+      "isActive": true
+    }
+  ]
+}
+```
+
 **Response Body**
 
 ```json
@@ -214,6 +285,8 @@ POST /api/admin/{guildId}/notice-config
 **Rules**
 
 - 관리자는 테스트 크롤링으로 확인한 설정을 저장합니다.
+- `preset` 모드는 Backend 프리셋 값을 resolve하여 저장합니다.
+- `custom` 모드는 사용자가 입력한 사이트 이름, URL, Selector를 저장합니다.
 - Discord 서버당 하나의 공지 사이트만 설정 할 수 있습니다.
 - 활성화된 카테고리만 Discord 역할 생성 대상입니다.
 - `roleName`을 입력하지 않으면 기본 역할 이름은 `IRIS-{카테고리명}`입니다.
@@ -243,7 +316,7 @@ POST /api/admin/{guildId}/notice-config
 
 ---
 
-## 3.3 전체 설정 조회
+## 3.4 전체 설정 조회
 
 현재 Discord 서버에 등록된 공지 사이트와 카테고리 설정을 함께 조회합니다.
 관리자가 설정한 기존 설정이 있을 때 사용합니다.
@@ -307,30 +380,24 @@ GET /api/admin/{guildId}/notice-config
 
 ---
 
-## 3.4 전체 설정 교체
+## 3.5 전체 설정 교체
 
 관리자가 설정한 기존 설정이 있을 때 사용됩니다.
 현재 Discord 서버에 등록된 공지 사이트와 카테고리 설정을 새로운 설정으로 전체 교체합니다.
-관리자가 사이트 URL 또는 Selector를 변경하고, 테스트 크롤링을 통해 새 카테고리를 감지한 뒤 최종 저장할 때 사용합니다.
+관리자가 프리셋을 변경하거나 직접 설정의 사이트 URL 또는 Selector를 변경하고, 테스트 크롤링을 통해 새 카테고리를 감지한 뒤 최종 저장할 때 사용합니다.
 site 정보는 수정하고, category 설정은 새로 감지된 카테고리 목록 기준으로 다시 저장합니다.
-Frontend 관리자 흐름에서는 기존 설정이 있는 상태에서 사이트 정보 또는 Selector를 수정하고 테스트 크롤링을 다시 실행한 뒤 저장할 때 이 API를 호출합니다.
+Frontend 관리자 흐름에서는 기존 설정이 있는 상태에서 프리셋 또는 직접 설정 값을 변경하고 테스트 크롤링을 다시 실행한 뒤 저장할 때 이 API를 호출합니다.
 
 ```http
 PUT /api/admin/{guildId}/notice-config
 ```
 
-**Request Body**
+**Preset Request Body**
 ```json
 {
   "site": {
-    "name": "경북대학교 컴퓨터학부",
-    "url": "https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor",
-    "listSelector": ".basic_tbl_head tbody > tr",
-    "titleSelector": ".bo_tit a",
-    "linkSelector": ".bo_tit a",
-    "dateSelector": ".td_datetime",
-    "categorySelector": ".bo_cate_link",
-    "categoryListSelector": "#bo_cate_ul a"
+    "mode": "preset",
+    "presetId": "knu-computer-science"
   },
   "categories": [
     {
@@ -348,6 +415,10 @@ PUT /api/admin/{guildId}/notice-config
   ]
 }
 ```
+
+**Custom Request Body**
+
+`POST /api/admin/{guildId}/notice-config`의 custom request body와 동일합니다.
 
 **Response Body**
 
@@ -387,9 +458,9 @@ PUT /api/admin/{guildId}/notice-config
 - `500 Internal Server Error`
   - DB 교체 또는 Discord API 연동 중 알 수 없는 서버 오류
 
-## 3.5 카테고리 설정만 수정
+## 3.6 카테고리 설정만 수정
 
-공지 사이트 URL과 Selector는 유지하고 카테고리 설정만 변경합니다.
+공지 사이트 프리셋 또는 직접 설정의 URL과 Selector는 유지하고 카테고리 설정만 변경합니다.
 변경 가능한 값:
 - 알림 채널
 - 역할 이름
@@ -478,10 +549,10 @@ PATCH /api/admin/{guildId}/notice-config/categories
 
 ---
 
-## 3.6 전체 설정 삭제
+## 3.7 전체 설정 삭제
 
 현재 Discord 서버에 등록된 공지 사이트 설정을 삭제하여 사이트 등록 단계부터 다시 설정할 수 있게 합니다.
-관리자가 공지 사이트 URL 또는 Selector를 처음부터 다시 잡으려는 경우 사용합니다.
+관리자가 프리셋을 다시 선택하거나 직접 설정의 URL/Selector를 처음부터 다시 잡으려는 경우 사용합니다.
 
 ```http
 DELETE /api/admin/{guildId}/notice-config
@@ -561,6 +632,7 @@ GET /api/admin/{guildId}/discord/channels
 - Bot이 접근 가능한 텍스트 채널만 반환합니다.
 - Bot이 메시지를 전송할 수 없는 채널은 제외합니다.
 - 채널은 Discord 서버의 현재 상태를 기준으로 조회합니다.
+- 관리자 페이지에서 채널 목록 새로고침을 실행하면 이 API를 다시 호출합니다.
 - 채널 이름과 ID를 함께 반환합니다.
 - Discord 서버에 접근할 수 없으면 조회를 실패 처리합니다.
 - `guildId`는 URL path parameter로 받고, Discord client에서 해당 guild를 조회합니다.

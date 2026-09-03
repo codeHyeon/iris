@@ -17,6 +17,7 @@ interface CategorySettingsStepProps {
     value: string | boolean,
   ) => void
   onNotificationChannelChange: (channelId: string) => void
+  onRefreshChannels: () => void
   onPrevious: () => void
   onSave: () => void
   onNext: () => void
@@ -33,6 +34,7 @@ export function CategorySettingsStep({
   saveError,
   onNotificationChannelChange,
   onCategoryChange,
+  onRefreshChannels,
   onPrevious,
   onSave,
   onNext,
@@ -45,7 +47,17 @@ export function CategorySettingsStep({
       </header>
 
       <section className="notification-channel-card">
-        <h2>알림 채널</h2>
+        <div className="section-title-row">
+          <h2>알림 채널</h2>
+          <button
+            className="primary-small"
+            type="button"
+            disabled={isLoadingChannels}
+            onClick={onRefreshChannels}
+          >
+            {isLoadingChannels ? '새로고침 중...' : '채널 새로고침'}
+          </button>
+        </div>
         {isLoadingChannels && <p className="table-message">Discord 채널 목록을 불러오는 중입니다.</p>}
         {channelLoadError && <p className="table-message error">{channelLoadError}</p>}
         <div className="notification-channel-field">
@@ -72,7 +84,13 @@ export function CategorySettingsStep({
           <div className="table-row table-head">
             <span>카테고리</span>
             <span>역할 이름</span>
-            <span>활성화</span>
+            <span className="table-head-label">
+              활성화
+              <span className="field-help" tabIndex={0} aria-label="꺼두면 구독 및 알림 대상에서 제외됩니다.">
+                ?
+                <span className="field-help-tooltip">꺼두면 구독 및 알림 대상에서 제외됩니다.</span>
+              </span>
+            </span>
           </div>
           {categories.map((category) => (
             <div className={category.isActive ? 'table-row' : 'table-row inactive-category-row'} key={category.name}>
@@ -106,8 +124,7 @@ export function CategorySettingsStep({
       </section>
 
       <p className="notice-box">
-        비활성화한 카테고리는 구독 및 알림 대상에서 제외됩니다. 역할 이름은 Discord 서버에 없는
-        새 이름을 사용해주세요.
+        역할 이름은 Discord 서버에 없는 새 이름을 입력해주세요.
       </p>
 
       <div className="admin-actions">

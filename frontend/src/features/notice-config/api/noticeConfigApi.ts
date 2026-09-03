@@ -9,6 +9,8 @@ import type {
   DetectedCategory,
   NoticeConfigDraft,
   NoticeConfigForm,
+  NoticeSiteInput,
+  NoticeSitePreset,
   NoticePreview,
   TestCrawlResult,
 } from '../types/noticeConfigTypes'
@@ -27,6 +29,16 @@ interface NoticeConfigSitePayload {
   categorySelector: string
   categoryListSelector: string
 }
+
+type NoticeSiteInputPayload =
+  | {
+      mode: 'preset'
+      presetId: string
+    }
+  | {
+      mode: 'custom'
+      site: NoticeConfigSitePayload
+    }
 
 interface NoticeConfigCategoryPayload {
   name: string
@@ -65,17 +77,23 @@ interface UpdateCategoriesResponse extends MessageResponse {
 
 export async function testNoticeConfigCrawl(
   guildId: string,
-  form: NoticeConfigForm,
+  site: NoticeSiteInput,
 ): Promise<TestCrawlResult> {
   const response = await postJson<ApiResponse<TestCrawlResponse>>(
     `/admin/${guildId}/notice-config/test`,
-    toSitePayload(form),
+    toNoticeSiteInputPayload(site),
   )
 
   return {
     notices: response.data.notices,
     categories: response.data.categories.map(toDetectedCategory),
   }
+}
+
+export async function getNoticeSitePresets() {
+  const response = await getJson<ApiResponse<NoticeSitePreset[]>>('/notice-presets')
+
+  return response.data
 }
 
 export async function getNoticeConfig(guildId: string) {
@@ -154,8 +172,19 @@ function toNoticeConfigForm(site: NoticeConfigSitePayload): NoticeConfigForm {
 
 function toNoticeConfigPayload(draft: NoticeConfigDraft) {
   return {
-    site: toSitePayload(draft.form),
+    site: toNoticeSiteInputPayload(draft.site),
     categories: draft.categories.map(toCategoryPayload),
+  }
+}
+
+function toNoticeSiteInputPayload(site: NoticeSiteInput): NoticeSiteInputPayload {
+  if (site.mode === 'preset') {
+    return site
+  }
+
+  return {
+    mode: 'custom',
+    site: toSitePayload(site.site),
   }
 }
 

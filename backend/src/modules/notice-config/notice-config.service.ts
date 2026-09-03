@@ -1,6 +1,7 @@
 import { AppError } from '../../shared/errors/app-error.js'
 import { logger } from '../../shared/logger/logger.js'
 import { crawlNotices } from '../crawling/index.js'
+import { getNoticeSitePreset } from '../crawling/crawl-presets.js'
 import { toNoticePreview } from '../crawling/notice-normalizer.js'
 import { discordService, getDefaultIrisRoleName } from '../discord/discord.service.js'
 import { keywordRepository } from '../keyword/keyword.repository.js'
@@ -9,6 +10,7 @@ import { subscriptionRepository } from '../subscription/subscription.repository.
 import { noticeConfigRepository } from './notice-config.repository.js'
 import type {
   SaveNoticeConfigBody,
+  NoticeSiteInput,
   TestCrawlBody,
   UpdateNoticeCategoriesBody,
 } from './notice-config.schemas.js'
@@ -29,9 +31,18 @@ function assertActiveCategoriesHaveRoles(categories: PreparedNoticeCategory[]) {
   }
 }
 
+function resolveNoticeSiteInput(siteInput: NoticeSiteInput) {
+  if (siteInput.mode === 'preset') {
+    return getNoticeSitePreset(siteInput.presetId)
+  }
+
+  return siteInput.site
+}
+
 export class NoticeConfigService {
   async testCrawlNoticeConfig(_guildId: string, body: TestCrawlBody) {
-    const result = await crawlNotices(body)
+    const site = resolveNoticeSiteInput(body)
+    const result = await crawlNotices(site)
 
     return {
       ...result,
@@ -109,9 +120,10 @@ export class NoticeConfigService {
     assertActiveCategoriesHaveRoles(categories)
 
     try {
+      const site = resolveNoticeSiteInput(body.site)
       const noticeSite = await noticeConfigRepository.createNoticeConfig({
         guildId,
-        site: body.site,
+        site,
         categories,
       })
 
@@ -262,9 +274,10 @@ export class NoticeConfigService {
     assertActiveCategoriesHaveRoles(categories)
 
     try {
+      const site = resolveNoticeSiteInput(body.site)
       const noticeSite = await noticeConfigRepository.replaceNoticeConfig({
         guildId,
-        site: body.site,
+        site,
         categories,
       })
 

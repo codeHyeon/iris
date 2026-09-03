@@ -20,6 +20,7 @@ Discord:
 
 Notice site:
 
+- presetId: `knu-computer-science`
 - siteName: `경북대학교 컴퓨터학부`
 - url: `https://computer.knu.ac.kr/bbs/board.php?bo_table=sub6_1_a&lang=kor`
 
@@ -34,19 +35,25 @@ Selectors:
 
 Expected result:
 
+- 프리셋 목록 조회 성공
+- 경북대학교 컴퓨터학부 프리셋 선택 가능
 - 테스트 크롤링 성공
 - 최근 공지 preview 1개 이상 표시
 - 감지 카테고리 1개 이상 표시
 - Discord 채널 목록 조회 성공
+- 카테고리 설정 화면에서 채널 목록 새로고침 성공
 - 공통 알림 채널 1개 선택 후 모든 카테고리에 같은 `channelId` 저장
 - 설정 저장 후 새로고침 시 기존 설정 조회 성공
 - 기존 설정에서 카테고리만 수정하면 `PATCH /notice-config/categories` 호출
-- 사이트 정보 또는 selector 재테스트 후 저장하면 `PUT /notice-config` 호출
+- 프리셋 변경 또는 직접 설정 재테스트 후 저장하면 `PUT /notice-config` 호출
 - 설정 삭제 UI로 삭제하면 사이트 등록 단계로 복귀
 
 Notes:
 
 - 외부 사이트 DOM이 바뀌면 selector가 깨질 수 있다.
+- 지원 사이트 모드는 selector를 화면에 직접 노출하지 않는다.
+- 지원 사이트 모드는 사이트 추가 요청 UI를 제공한다.
+- 직접 설정 모드는 selector 입력과 설정 방법 UI를 유지한다.
 - 테스트 전 기존 설정이 있으면 DELETE API로 초기화한다.
 
 ---
@@ -91,6 +98,12 @@ curl -s "http://localhost:3000/api/health" | jq
 curl -s "http://localhost:3000/api/admin/1524226987332206632/discord/channels" | jq
 ```
 
+공지 사이트 프리셋 목록 확인:
+
+```bash
+curl -s "http://localhost:3000/api/notice-presets" | jq
+```
+
 새 테스트 전 기존 공지 설정 초기화:
 
 ```bash
@@ -121,13 +134,19 @@ http://localhost:5173/admin/1524226987332206632
 
 브라우저 수동 확인 목록:
 
-- 빈 입력으로 테스트 크롤링을 실행하면 입력 안내 메시지가 표시된다.
+- 사이트 등록 첫 진입 시 지원 사이트 모드가 기본 선택된다.
+- 프리셋 목록에서 선택된 프리셋은 IRIS 색상으로 강조된다.
+- 지원 사이트 모드에서 사이트 추가 요청 모달을 열 수 있다.
+- 지원 사이트 모드에서 경북대학교 컴퓨터학부 프리셋으로 테스트 크롤링을 실행할 수 있다.
+- 직접 설정 모드에서 빈 입력으로 테스트 크롤링을 실행하면 입력 안내 메시지가 표시된다.
+- 직접 설정 모드에서 설정 방법 UI가 표시되고 사이트 추가 요청 UI는 표시되지 않는다.
 - 테스트 크롤링 전 `카테고리 설정` 탭을 클릭하면 이동 제한 안내가 표시된다.
 - 테스트 크롤링 성공 후 최근 공지는 `YYYY.MM.DD · 공지 바로가기` 형식으로 표시된다.
+- 카테고리 설정 화면에서 채널 목록 새로고침 버튼을 누르면 `GET /api/admin/{guildId}/discord/channels`를 다시 호출한다.
 - 신규 설정 저장은 `POST /api/admin/{guildId}/notice-config`를 호출한다.
 - 새로고침 후 기존 설정이 있으면 카테고리 설정 단계로 진입한다.
 - 기존 설정에서 카테고리만 수정하면 `PATCH /api/admin/{guildId}/notice-config/categories`를 호출한다.
-- 사이트 정보 또는 selector를 수정하고 테스트 크롤링을 다시 실행한 뒤 저장하면 `PUT /api/admin/{guildId}/notice-config`를 호출한다.
+- 프리셋 변경 또는 직접 설정 값을 수정하고 테스트 크롤링을 다시 실행한 뒤 저장하면 `PUT /api/admin/{guildId}/notice-config`를 호출한다.
 - 사이드바의 설정 삭제 UI로 삭제하면 `DELETE /api/admin/{guildId}/notice-config`를 호출하고 사이트 등록 단계로 복귀한다.
 
 ---
@@ -143,15 +162,16 @@ http://localhost:5173/admin/1524226987332206632
 1. Frontend landing 접속
 2. Discord `/setup` 실행
 3. 관리자 페이지 링크 접속
-4. 경북대학교 컴퓨터학부 selector로 테스트 크롤링
+4. 경북대학교 컴퓨터학부 프리셋으로 테스트 크롤링
 5. 공통 알림 채널과 카테고리 역할 저장
-6. `/guide` 안내 확인
-7. `/subscribe` 구독과 역할 부여 확인
-8. `/keyword` 키워드 추가, 삭제 확인
-9. Scheduler run-once 실행
-10. 공통 알림 채널 메시지 확인
-11. `DM으로 저장`, `요약 보기`, `알림 삭제` 버튼 확인
-12. 키워드 DM 알림 확인
+6. 채널 목록 새로고침 확인
+7. `/guide` 안내 확인
+8. `/subscribe` 구독과 역할 부여 확인
+9. `/keyword` 키워드 추가, 삭제 확인
+10. Scheduler run-once 실행
+11. 공통 알림 채널 메시지 확인
+12. `DM으로 저장`, `요약 보기`, `알림 삭제` 버튼 확인
+13. 키워드 DM 알림 확인
 
 Scheduler 1회 실행:
 
@@ -186,7 +206,8 @@ SELECT id, title FROM notices ORDER BY id DESC LIMIT 10;
 - IRIS Bot 초대 가능 여부 확인
 - `/setup`, `/subscribe`, `/keyword`, `/guide` 명령어 확인
 - 관리자 페이지 접속 확인
-- 경북대학교 컴퓨터학부 URL과 selector 준비
+- 경북대학교 컴퓨터학부 프리셋 선택 확인
+- 직접 설정 모드의 URL과 selector 입력 확인
 - 설정 저장 직후 초기 수집 확인
 - 공지 채널 알림 확인
 - `DM으로 저장`, `요약 보기`, `알림 삭제` 버튼 확인
@@ -198,7 +219,7 @@ SELECT id, title FROM notices ORDER BY id DESC LIMIT 10;
 1. 랜딩 페이지에서 서비스 목적 확인
 2. Discord Bot 초대
 3. `/setup`으로 관리자 페이지 이동
-4. 공지 사이트와 selector 입력
+4. 경북대학교 컴퓨터학부 프리셋 선택
 5. 테스트 크롤링 결과 확인
 6. 알림 채널과 카테고리 역할 저장
 7. `/subscribe`로 카테고리 구독

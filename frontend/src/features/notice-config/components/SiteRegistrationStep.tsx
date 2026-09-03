@@ -104,6 +104,12 @@ export function SiteRegistrationStep({
               </button>
             ))}
           </div>
+          <div className="preset-request-row">
+            <span>원하는 사이트가 없나요?</span>
+            <button className="primary-small" type="button" onClick={() => setIsRequestModalOpen(true)}>
+              사이트 추가 요청
+            </button>
+          </div>
           {!isLoadingPresets && presets.length === 0 && (
             <p className="table-message">사용 가능한 지원 사이트가 없습니다.</p>
           )}
@@ -133,15 +139,8 @@ export function SiteRegistrationStep({
               <h2>2. Selector 설정</h2>
               <div className="helper-actions">
                 <span>도움이 필요하신가요?</span>
-                <button type="button" onClick={openSelectorGuide}>
+                <button className="primary-small" type="button" onClick={openSelectorGuide}>
                   설정 방법
-                </button>
-                <button
-                  className="primary-small"
-                  type="button"
-                  onClick={() => setIsRequestModalOpen(true)}
-                >
-                  개발자에게 요청하기
                 </button>
               </div>
             </div>
@@ -206,10 +205,10 @@ export function SiteRegistrationStep({
         </button>
       </div>
 
-      {siteMode === 'custom' && isRequestModalOpen && (
+      {isRequestModalOpen && (
         <SelectorHelpRequestModal
-          initialSiteName={form.siteName}
-          initialUrl={form.url}
+          initialSiteName={siteMode === 'custom' ? form.siteName : ''}
+          initialUrl={siteMode === 'custom' ? form.url : ''}
           onClose={() => setIsRequestModalOpen(false)}
           onSubmit={onSelectorHelpRequest}
         />

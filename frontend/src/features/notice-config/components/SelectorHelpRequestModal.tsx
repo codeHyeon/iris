@@ -74,14 +74,14 @@ export function SelectorHelpRequestModal({
         onMouseDown={(event) => event.stopPropagation()}
       >
         <header>
-          <h2 id="selectorHelpRequestTitle">개발자에게 요청하기</h2>
+          <h2 id="selectorHelpRequestTitle">사이트 추가 요청</h2>
           <button className="modal-close-button" type="button" aria-label="요청 창 닫기" onClick={onClose}>
             <X size={20} strokeWidth={2.5} aria-hidden="true" />
           </button>
         </header>
 
         <p>
-          Selector 설정이 어려운 경우 공지 사이트 정보를 남겨주세요.
+          지원 사이트에 추가하고 싶은 공지 사이트 정보를 남겨주세요.
         </p>
 
         <label htmlFor="requestEmail">응답받을 이메일</label>
@@ -93,7 +93,7 @@ export function SelectorHelpRequestModal({
           onChange={(event) => updateRequest('email', event.target.value)}
         />
 
-        <label htmlFor="requestSiteName">요청 사이트 제목</label>
+        <label htmlFor="requestSiteName">요청 사이트 이름</label>
         <input
           id="requestSiteName"
           value={request.siteName}

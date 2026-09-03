@@ -41,7 +41,7 @@ export function GuidePanel({ step }: { step: AdminStep }) {
           />
         </div>
         <p className="guide-tip">
-          지원 사이트를 먼저 사용하고, 필요한 경우 직접 설정의 설정 방법과 개발자 요청을 이용해주세요.
+          테스트 크롤링 결과를 확인한 뒤 카테고리 설정으로 이동하세요.
         </p>
       </aside>
     )
@@ -53,18 +53,13 @@ export function GuidePanel({ step }: { step: AdminStep }) {
       <div className="guide-step-list">
         <GuideStep
           number="01"
-          title="카테고리 확인"
-          description="테스트 크롤링에서 감지된 카테고리 목록을 확인합니다."
-        />
-        <GuideStep
-          number="02"
           title="알림 채널"
           description="모든 공지 알림을 보낼 Discord 채널을 선택하고, 필요하면 채널 목록을 새로고침합니다."
         />
         <GuideStep
-          number="03"
+          number="02"
           title="구독 역할"
-          description="사용자가 카테고리를 구독하면 설정한 이름의 역할이 부여됩니다."
+          description="카테고리별 역할 이름을 정합니다. 사용자가 구독하면 역할이 부여되고, 새 공지는 해당 역할을 멘션해 전달됩니다."
         />
       </div>
     </aside>

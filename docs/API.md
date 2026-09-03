@@ -174,9 +174,9 @@ POST /api/admin/{guildId}/notice-config/test
 
 ---
 
-## 3.2.1 Selector 설정 도움 요청
+## 3.2.1 지원 사이트 추가 요청
 
-Selector 설정이 어려운 관리자가 개발자에게 설정 도움을 요청할 때 사용합니다.
+지원 사이트 목록에 없는 공지 사이트를 관리자가 추가 요청할 때 사용합니다.
 
 MVP 현재는 Backend API를 제공하지 않고, Frontend에서 실제 전송 없이 접수 안내 문구만 표시합니다.
 실제 서비스 연동 후에는 요청 내용이 운영자 메일 또는 저장소로 전달되고, 운영자는 사용자가 입력한 이메일 주소로 답변합니다.
@@ -184,7 +184,7 @@ MVP 현재는 Backend API를 제공하지 않고, Frontend에서 실제 전송 �
 Planned endpoint:
 
 ```http
-POST /api/admin/{guildId}/selector-help-requests
+POST /api/admin/{guildId}/notice-site-requests
 ```
 
 **Request Body**

@@ -180,6 +180,7 @@
 
 .helper-actions button,
 .admin-actions button,
+.primary-small,
 .secondary-small {
   height: 42px;
   border: 1px solid #dbe3f0;
@@ -191,6 +192,7 @@
   font-weight: 900;
 }
 
+.primary-small:disabled,
 .secondary-small:disabled {
   cursor: not-allowed;
   opacity: 0.55;
@@ -290,7 +292,31 @@
   white-space: nowrap;
 }
 
+.preset-request-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+  color: #334155;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.preset-request-row button {
+  height: 42px;
+  border: 1px solid #dbe3f0;
+  border-radius: 10px;
+  padding: 0 18px;
+  color: #4f46e5;
+  background: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+}
+
 .helper-actions .primary-small,
+.preset-request-row .primary-small,
+.section-title-row .primary-small,
 .primary-action,
 .wide-primary {
   border: 0;
@@ -300,6 +326,8 @@
 }
 
 .helper-actions button.primary-small,
+.preset-request-row button.primary-small,
+.section-title-row button.primary-small,
 .admin-actions button.primary-action,
 .modal-actions button.primary-action,
 .request-modal button.primary-action {
@@ -465,6 +493,52 @@
   color: #334155;
   font-size: 15px;
   font-weight: 900;
+}
+
+.table-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-help {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #633df4;
+  background: #f0efff;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: help;
+}
+
+.field-help-tooltip {
+  position: absolute;
+  right: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 5;
+  width: max-content;
+  max-width: 260px;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: #ffffff;
+  background: #111827;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.45;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(50%) translateY(4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.field-help:hover .field-help-tooltip,
+.field-help:focus .field-help-tooltip {
+  opacity: 1;
+  transform: translateX(50%) translateY(0);
 }
 
 .category-name {
@@ -990,6 +1064,7 @@
   .admin-actions,
   .left-actions,
   .right-actions,
+  .preset-request-row,
   .preview-header,
   .summary-card dl div,
   .command-card div {
